@@ -75,8 +75,7 @@ EXPOSE 4001
 ENV PYTHONPATH=/app/core
 ENV PYTHONUNBUFFERED=1
 
-# 启动脚本
-COPY deploy/start.sh /app/start.sh
+# 启动脚本权限设置
 RUN chmod +x /app/start.sh
 
 # 启动命令
