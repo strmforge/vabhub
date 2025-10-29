@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>品牌标识系统 - MediaMaster Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0; 
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 3rem; }
+        .header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.2rem; color: #94a3b8; }
+        
+        .brand-section { 
+            background: rgba(30, 41, 59, 0.6); 
+            border-radius: 16px; 
+            padding: 2rem; 
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 2rem; 
+            margin-top: 2rem;
+        }
+        
+        .logo-item { 
+            background: rgba(15, 23, 42, 0.8); 
+            border-radius: 12px; 
+            padding: 2rem; 
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s ease;
+        }
+        .logo-item:hover { transform: translateY(-5px); }
+        
+        .logo-preview { 
+            width: 120px; 
+            height: 120px; 
+            margin: 0 auto 1rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            border-radius: 20px;
+        }
+        
+        .color-primary { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+        .color-dark { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+        .color-light { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); color: #1e293b; }
+        
+        .name-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .name-option { 
+            background: rgba(15, 23, 42, 0.6); 
+            padding: 1.5rem; 
+            border-radius: 8px; 
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .name-option:hover { background: rgba(30, 41, 59, 0.8); }
+        .name-option.selected { border-color: #6366f1; background: rgba(99, 102, 241, 0.1); }
+        
+        .name-primary { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .name-desc { font-size: 0.9rem; color: #94a3b8; }
+        
+        .color-palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 1rem; }
+        .color-item { 
+            height: 60px; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .typography-demo { margin-top: 1rem; }
+        .font-sample { margin: 1rem 0; }
+        .font-large { font-size: 2rem; font-weight: 700; }
+        .font-medium { font-size: 1.5rem; font-weight: 600; }
+        .font-small { font-size: 1rem; font-weight: 400; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>MediaMaster Pro</h1>
+            <p>智能媒体管理平台 - 品牌标识系统</p>
+        </div>
+        
+        <!-- 品牌名称选择 -->
+        <div class="brand-section">
+            <h2>品牌名称选项</h2>
+            <div class="name-options">
+                <div class="name-option selected" onclick="selectName('MediaMaster Pro')">
+                    <div class="name-primary">MediaMaster Pro</div>
+                    <div class="name-desc">专业媒体管理大师</div>
+                </div>
+                <div class="name-option" onclick="selectName('SmartMedia Hub')">
+                    <div class="name-primary">SmartMedia Hub</div>
+                    <div class="name-desc">智能媒体中心</div>
+                </div>
+                <div class="name-option" onclick="selectName('MediaFlow AI')">
+                    <div class="name-primary">MediaFlow AI</div>
+                    <div class="name-desc">AI驱动的媒体流</div>
+                </div>
+                <div class="name-option" onclick="selectName('CineSync Pro')">
+                    <div class="name-primary">CineSync Pro</div>
+                    <div class="name-desc">专业影视同步</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Logo设计 -->
+        <div class="brand-section">
+            <h2>Logo设计方案</h2>
+            <div class="logo-grid">
+                <div class="logo-item">
+                    <div class="logo-preview color-primary">
+                        <img src="../logo.png" alt="SmartMedia Hub Logo" width="80" height="80" style="border-radius: 20px;">
+                    </div>
+                    <h3>现代简约版</h3>
+                    <p>简洁的播放器图标，代表媒体播放和智能管理</p>
+                </div>
+                
+                <div class="logo-item">
+                    <div class="logo-preview color-dark">
+                        <img src="../logo.png" alt="SmartMedia Hub Logo" width="80" height="80" style="border-radius: 20px;">
+                    </div>
+                    <h3>科技智能版</h3>
+                    <p>播放按钮与AI节点的结合，体现智能分析能力</p>
+                </div>
+                
+                <div class="logo-item">
+                    <div class="logo-preview color-light">
+                        <img src="../logo.png" alt="SmartMedia Hub Logo" width="80" height="80" style="border-radius: 20px;">
+                    </div>
+                    <h3>专业影视版</h3>
+                    <p>电影胶片与播放器的结合，突出专业媒体处理</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 色彩系统 -->
+        <div class="brand-section">
+            <h2>品牌色彩系统</h2>
+            <div class="color-palette">
+                <div class="color-item" style="background: #6366f1; color: white;">主色<br>#6366f1</div>
+                <div class="color-item" style="background: #8b5cf6; color: white;">辅助色<br>#8b5cf6</div>
+                <div class="color-item" style="background: #0f172a; color: white;">深色背景<br>#0f172a</div>
+                <div class="color-item" style="background: #1e293b; color: white;">次级背景<br>#1e293b</div>
+                <div class="color-item" style="background: #e2e8f0; color: #1e293b;">文字色<br>#e2e8f0</div>
+            </div>
+        </div>
+        
+        <!-- 字体系统 -->
+        <div class="brand-section">
+            <h2>字体系统</h2>
+            <div class="typography-demo">
+                <div class="font-sample">
+                    <div class="font-large">MediaMaster Pro - 标题字体</div>
+                    <div>Inter Bold 700 - 用于品牌标题和重要信息</div>
+                </div>
+                <div class="font-sample">
+                    <div class="font-medium">智能媒体管理平台 - 正文字体</div>
+                    <div>Inter SemiBold 600 - 用于正文和导航</div>
+                </div>
+                <div class="font-sample">
+                    <div class="font-small">专业的全球智能媒体管理解决方案</div>
+                    <div>Inter Regular 400 - 用于描述和辅助信息</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function selectName(name) {
+            document.querySelectorAll('.name-option').forEach(opt => opt.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            document.querySelector('.header h1').textContent = name;
+        }
+    </script>
+</body>
+</html>

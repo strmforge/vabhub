@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: media-renamer-config
+  namespace: media-renamer
+data:
+  app.name: "MediaRenamer Enhanced"
+  app.version: "1.1.0"
+  app.debug: "false"
+  
+  # 数据库配置
+  database.host: "postgres-service"
+  database.port: "5432"
+  database.name: "media_renamer"
+  
+  # Redis配置
+  redis.host: "redis-service"
+  redis.port: "6379"
+  redis.db: "0"
+  
+  # Web服务配置
+  web.host: "0.0.0.0"
+  web.port: "8000"
+  web.debug: "false"
+  
+  # PT配置
+  pt.max_concurrent_downloads: "5"
+  pt.download_path: "/downloads"
+  pt.auto_cleanup: "true"
+  
+  # AI配置
+  ai.recognition_enabled: "true"
+  ai.search_enabled: "true"
+  ai.recommendation_enabled: "false"
+  
+  # 工作流配置
+  workflow.auto_start: "true"
+  workflow.max_parallel: "3"
+  
+  # 插件配置
+  plugin.auto_load: "true"
+  plugin.hot_reload: "false"
+  
+  # 安全配置
+  security.encryption_enabled: "false"
+  security.api_key_required: "false"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: media-renamer-secrets
+  namespace: media-renamer
+type: Opaque
+data:
+  # 使用 base64 编码的值
+  database-url: "cG9zdGdyZXNxbDovL3VzZXI6cGFzc0Bwb3N0Z3Jlcy1zZXJ2aWNlOjU0MzIvbWVkaWFfcmVuYW1lcg=="
+  redis-url: "cmVkaXM6Ly9yZWRpcy1zZXJ2aWNlOjYzNzkvMA=="
+  api-key: "eW91ci1zZWNyZXQtYXBpLWtleQ=="

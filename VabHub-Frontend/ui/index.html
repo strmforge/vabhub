@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartMedia Hub - 智能媒体管理平台</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="css/enhanced-search.css">
+    <link rel="stylesheet" href="css/batch-processor.css">
+    <link rel="stylesheet" href="css/enhanced-features.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 应用容器 -->
+    <div id="app" class="app-container">
+        <!-- 顶部导航栏 -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <img src="logo.png" alt="SmartMedia Hub" width="48" height="48" style="border-radius: 12px;">
+                    <span class="logo-text">SmartMedia Hub</span>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="search-bar">
+                    <input type="text" placeholder="搜索媒体文件、设备或设置..." class="search-input">
+                    <button class="search-btn">
+                        <svg width="16" height="16" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="header-actions">
+                    <button class="action-btn" title="通知">
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <path d="M10 2a6 6 0 0 1 6 6v3.586l1.707 1.707A1 1 0 0 1 17 14H3a1 1 0 0 1-.707-1.707L4 11.586V8a6 6 0 0 1 6-6zM10 18a3 3 0 0 1-3-3h6a3 3 0 0 1-3 3z" fill="currentColor"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="action-btn" title="设置">
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <path d="M10 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM2 10a8 8 0 1 1 16 0 8 8 0 1 1-16 0z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23667eea'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-size='14' font-weight='bold'%3E用户%3C/text%3E%3C/svg%3E" alt="用户">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 侧边栏 -->
+        <aside class="app-sidebar">
+            <nav class="sidebar-nav">
+                <!-- 核心功能 -->
+                <div class="nav-section">
+                    <h3 class="section-title">核心功能</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item active">
+                            <a href="#dashboard" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4zm0 6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6zm10-1a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-6z" fill="currentColor"/>
+                                </svg>
+                                <span>仪表板</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#media-library" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4zm1 0v12h12V4H4z" fill="currentColor"/>
+                                    <path d="M7 7h6v6H7V7z" fill="currentColor"/>
+                                </svg>
+                                <span>媒体库</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#ai-analysis" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M9 12h2v2H9v-2zm0-4h2v2H9V8zm0-4h2v2H9V4zm-7 8c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7-7-3.13-7-7z" fill="currentColor"/>
+                                </svg>
+                                <span>AI分析</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 高级功能 -->
+                <div class="nav-section">
+                    <h3 class="section-title">高级功能</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#smart-home" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h1A1.5 1.5 0 0 0 12 13.5V8.207l.646.647a.5.5 0 0 0 .708-.708L10 1.5z" fill="currentColor"/>
+                                </svg>
+                                <span>智能家居</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#cloud-native" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M5.5 7a5.5 5.5 0 0 1 5.5-5.5A5.5 5.5 0 0 1 16.5 7a5.5 5.5 0 0 1-5.5 5.5A5.5 5.5 0 0 1 5.5 7z" fill="currentColor"/>
+                                    <path d="M3 13a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1z" fill="currentColor"/>
+                                </svg>
+                                <span>云原生</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#community" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M7 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2a5 5 0 0 0-5 5v1h10v-1a5 5 0 0 0-5-5zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2a5 5 0 0 0-5 5v1h10v-1a5 5 0 0 0-5-5z" fill="currentColor"/>
+                                </svg>
+                                <span>社区生态</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 工具 -->
+                <div class="nav-section">
+                    <h3 class="section-title">工具</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#settings" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M10 6a4 4 0 1 0 0 8 4 4 0 1 0 0-8zM2 10a8 8 0 1 1 16 0 8 8 0 1 1-16 0z" fill="currentColor"/>
+                                </svg>
+                                <span>系统设置</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#batch-processor" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4zm0 6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6zm10-1a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-6z" fill="currentColor"/>
+                                </svg>
+                                <span>批量处理</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#plugin-manager" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698c-.18-.072-.375-.144-.567-.267-.8-.4-1.4-1.2-1.4-2.2 0-1.3 1.1-2.4 2.4-2.4s2.4 1.1 2.4 2.4c0 1-.6 1.8-1.4 2.2-.155.103-.346.196-.567.267v1.698c.18.072.375.144.567.267.8.4 1.4 1.2 1.4 2.2 0 1.3-1.1 2.4-2.4 2.4s-2.4-1.1-2.4-2.4c0-1 .6-1.8 1.4-2.2.155-.103.346-.196.567-.267v-1.698c-.18-.072-.375-.144-.567-.267-.8-.4-1.4-1.2-1.4-2.2 0-1.3 1.1-2.4 2.4-2.4s2.4 1.1 2.4 2.4c0 1-.6 1.8-1.4 2.2z" fill="currentColor"/>
+                                </svg>
+                                <span>插件管理</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#backup-manager" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4zm1 0v12h12V4H4z" fill="currentColor"/>
+                                    <path d="M7 7h6v6H7V7z" fill="currentColor"/>
+                                </svg>
+                                <span>数据备份</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#logs" class="nav-link">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0zm8-6a6 6 0 1 0 0 12A6 6 0 0 0 10 4z" fill="currentColor"/>
+                                    <path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm0 1a7 7 0 1 0 0 14 7 7 0 0 0 0-14z" fill="currentColor"/>
+                                </svg>
+                                <span>日志查看</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="app-main">
+            <!-- 面包屑导航 -->
+            <nav class="breadcrumb">
+                <ol>
+                    <li><a href="#dashboard">仪表板</a></li>
+                    <li>概览</li>
+                </ol>
+            </nav>
+
+            <!-- 仪表板内容 -->
+            <div class="dashboard-content">
+                <!-- 统计卡片 -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24">
+                                <path d="M4 4h16v16H4V4zm2 2v12h12V6H6z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">1,247</div>
+                            <div class="stat-label">媒体文件</div>
+                        </div>
+                        <div class="stat-trend positive">+12%</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">98.5%</div>
+                            <div class="stat-label">AI识别准确率</div>
+                        </div>
+                        <div class="stat-trend positive">+2.3%</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24">
+                                <path d="M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5zm-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-2zm-3-4h8v2H8z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">在线设备</div>
+                        </div>
+                        <div class="stat-trend neutral">-</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">256 GB</div>
+                            <div class="stat-label">存储使用</div>
+                        </div>
+                        <div class="stat-trend negative">-15%</div>
+                    </div>
+                </div>
+
+                <!-- 图表区域 -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>媒体类型分布</h3>
+                            <div class="chart-actions">
+                                <button class="btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 16 16">
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" fill="currentColor"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <div class="placeholder-chart">图表区域</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>最近活动</h3>
+                            <div class="chart-actions">
+                                <button class="btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 16 16">
+                                        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" fill="currentColor"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <svg width="16" height="16" viewBox="0 0 16 16">
+                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">新增电影文件</div>
+                                        <div class="activity-time">2分钟前</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <svg width="16" height="16" viewBox="0 0 16 16">
+                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">AI识别完成</div>
+                                        <div class="activity-time">5分钟前</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- v4.2 功能增强面板 -->
+                <div class="enhanced-features-grid">
+                    <div class="feature-card">
+                        <div class="feature-header">
+                            <h3>智能搜索增强</h3>
+                            <span class="feature-badge">v4.2</span>
+                        </div>
+                        <div class="feature-content">
+                            <p>语义搜索、智能推荐、搜索历史</p>
+                            <div class="feature-stats">
+                                <span class="stat">准确率: 95%</span>
+                                <span class="stat">响应时间: 200ms</span>
+                            </div>
+                        </div>
+                        <div class="feature-actions">
+                            <button class="btn-primary" onclick="showEnhancedSearch()">立即体验</button>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-header">
+                            <h3>批量操作优化</h3>
+                            <span class="feature-badge">v4.2</span>
+                        </div>
+                        <div class="feature-content">
+                            <p>异步处理队列、进度监控、暂停恢复</p>
+                            <div class="feature-stats">
+                                <span class="stat">处理速度: 2x</span>
+                                <span class="stat">内存优化: 40%</span>
+                            </div>
+                        </div>
+                        <div class="feature-actions">
+                            <button class="btn-primary" onclick="showBatchProcessor()">开始使用</button>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-header">
+                            <h3>插件系统</h3>
+                            <span class="feature-badge">v4.2</span>
+                        </div>
+                        <div class="feature-content">
+                            <p>第三方扩展、热加载、插件市场</p>
+                            <div class="feature-stats">
+                                <span class="stat">插件数量: 15+</span>
+                                <span class="stat">兼容性: 100%</span>
+                            </div>
+                        </div>
+                        <div class="feature-actions">
+                            <button class="btn-primary" onclick="showPluginManager()">管理插件</button>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-header">
+                            <h3>数据备份恢复</h3>
+                            <span class="feature-badge">v4.2</span>
+                        </div>
+                        <div class="feature-content">
+                            <p>自动备份策略、云存储、备份验证</p>
+                            <div class="feature-stats">
+                                <span class="stat">备份频率: 每日</span>
+                                <span class="stat">恢复成功率: 99.9%</span>
+                            </div>
+                        </div>
+                        <div class="feature-actions">
+                            <button class="btn-primary" onclick="showBackupManager()">备份管理</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/enhanced-search.js"></script>
+    <script src="js/batch-processor.js"></script>
+    <script src="js/plugin-manager.js"></script>
+    <script src="js/backup-manager.js"></script>
+    <script src="js/v4_2-integration.js"></script>
+</body>
+</html>

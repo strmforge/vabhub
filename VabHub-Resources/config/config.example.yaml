@@ -1,0 +1,106 @@
+# VabHub 配置文件示例
+# 复制此文件为 config.yaml 并修改相应配置
+
+# 服务器配置
+server:
+  host: "0.0.0.0"
+  port: 8090
+  workers: 4
+  debug: false
+  log_level: "INFO"
+  
+# 数据库配置
+database:
+  type: "postgresql"  # postgresql, sqlite, mysql
+  host: "localhost"
+  port: 5432
+  name: "vabhub"
+  username: "vabhub"
+  password: "${DB_PASSWORD:-vabhub123}"
+  pool_size: 10
+  
+# Redis 配置
+redis:
+  host: "localhost"
+  port: 6379
+  password: "${REDIS_PASSWORD:-}"
+  db: 0
+  
+# 媒体库配置
+media:
+  library_path: "/media"
+  supported_formats:
+    video:
+      - "mp4"
+      - "mkv"
+      - "avi"
+      - "mov"
+      - "wmv"
+      - "flv"
+    audio:
+      - "mp3"
+      - "flac"
+      - "wav"
+      - "aac"
+    image:
+      - "jpg"
+      - "jpeg"
+      - "png"
+      - "gif"
+      - "bmp"
+  
+# 插件系统配置
+plugins:
+  enabled: true
+  auto_update: true
+  install_path: "./plugins"
+  
+# 认证配置
+auth:
+  secret_key: "${SECRET_KEY:-change_this_in_production}"
+  token_expire_hours: 24
+  
+# API 配置
+api:
+  rate_limit: 1000
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://127.0.0.1:3000"
+  
+# 任务队列配置
+celery:
+  broker_url: "redis://localhost:6379/0"
+  result_backend: "redis://localhost:6379/0"
+  
+# 文件处理配置
+file_processing:
+  max_file_size: "10GB"
+  chunk_size: "1MB"
+  
+# 通知配置
+notifications:
+  email:
+    enabled: false
+    smtp_host: "smtp.example.com"
+    smtp_port: 587
+    username: ""
+    password: ""
+  webhook:
+    enabled: false
+    url: ""
+  
+# 监控配置
+monitoring:
+  enabled: true
+  prometheus_port: 9090
+  
+# 备份配置
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # 每天凌晨2点
+  retention_days: 7
+  
+# 开发配置
+development:
+  hot_reload: false
+  api_docs: true

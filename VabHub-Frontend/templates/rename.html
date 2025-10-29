@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重命名文件 - SmartMedia Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-film me-2"></i>
+                SmartMedia Hub
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2><i class="fas fa-edit me-2"></i>智能重命名</h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="renameForm">
+                            <div class="mb-3">
+                                <label class="form-label">文件路径</label>
+                                <input type="text" class="form-control" id="filePath" 
+                                       placeholder="请输入文件完整路径" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">命名模板</label>
+                                <select class="form-select" id="template">
+                                    <option value="default">智能命名</option>
+                                    <option value="movie">电影命名</option>
+                                    <option value="tv">电视剧命名</option>
+                                    <option value="music">音乐命名</option>
+                                    <option value="ebook">电子书命名</option>
+                                    <option value="clean">简洁命名</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-eye me-2"></i>预览重命名
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div id="previewSection" style="display: none;">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>重命名预览</h5>
+                            <div class="mb-3">
+                                <label class="form-label">原文件名</label>
+                                <input type="text" class="form-control" id="originalName" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">新文件名</label>
+                                <input type="text" class="form-control" id="newName">
+                            </div>
+                            <button id="executeBtn" class="btn btn-success">
+                                <i class="fas fa-check me-2"></i>执行重命名
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('renameForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const filePath = document.getElementById('filePath').value;
+            const template = document.getElementById('template').value;
+            
+            try {
+                const response = await fetch('/api/preview-rename', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `file_path=${encodeURIComponent(filePath)}&template=${template}`
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('originalName').value = result.original;
+                    document.getElementById('newName').value = result.new_name;
+                    document.getElementById('previewSection').style.display = 'block';
+                } else {
+                    alert('预览失败: ' + result.error);
+                }
+            } catch (error) {
+                alert('预览出错: ' + error.message);
+            }
+        });
+        
+        document.getElementById('executeBtn').addEventListener('click', async function() {
+            const filePath = document.getElementById('filePath').value;
+            const newName = document.getElementById('newName').value;
+            
+            if (!newName) {
+                alert('请输入新文件名');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/execute-rename', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `file_path=${encodeURIComponent(filePath)}&new_name=${encodeURIComponent(newName)}`
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('重命名成功！');
+                    document.getElementById('previewSection').style.display = 'none';
+                    document.getElementById('renameForm').reset();
+                } else {
+                    alert('重命名失败: ' + result.error);
+                }
+            } catch (error) {
+                alert('重命名出错: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

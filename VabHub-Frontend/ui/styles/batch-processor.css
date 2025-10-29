@@ -1,0 +1,461 @@
+/* v4.2 批量操作优化样式 */
+
+/* 批量处理容器 */
+.batch-processor-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.batch-processor-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 批量处理头部 */
+.batch-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.batch-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.batch-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.stat-item i {
+    font-size: 16px;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* 进度条 */
+.batch-progress {
+    width: 100%;
+}
+
+.progress-bar-container {
+    width: 100%;
+}
+
+.batch-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), #8b5cf6);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.batch-status-text {
+    font-weight: 500;
+}
+
+.batch-percentage {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 控制按钮 */
+.batch-control-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.batch-control-buttons .btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.batch-control-buttons .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.batch-control-buttons .btn:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 任务列表 */
+.batch-task-list {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.task-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.task-count {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: normal;
+}
+
+.task-items {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.task-item:last-child {
+    border-bottom: none;
+}
+
+.task-item:hover {
+    background: var(--hover-bg);
+}
+
+.task-item.pending {
+    background: var(--bg-secondary);
+}
+
+.task-item.processing {
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.task-item.completed {
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.task-item.failed {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.task-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.task-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.task-type {
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.task-status {
+    font-size: 16px;
+    font-weight: 600;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.task-item.pending .task-status {
+    color: var(--text-tertiary);
+}
+
+.task-item.processing .task-status {
+    color: var(--primary-color);
+    animation: spin 1s linear infinite;
+}
+
+.task-item.completed .task-status {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.task-item.failed .task-status {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* 拖放支持 */
+.batch-processor-container.drag-over {
+    border-color: var(--primary-color);
+    background: rgba(139, 92, 246, 0.05);
+}
+
+.batch-processor-container.drag-over::before {
+    content: '释放文件添加到批量处理队列';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 16px;
+    z-index: 10;
+}
+
+/* 通知 */
+.batch-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 1000;
+    animation: slideInRight 0.3s ease;
+    max-width: 300px;
+}
+
+.batch-notification.info {
+    background: var(--primary-color);
+    color: white;
+}
+
+.batch-notification.error {
+    background: #ef4444;
+    color: white;
+}
+
+.batch-notification.success {
+    background: #22c55e;
+    color: white;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 统计图表 */
+.batch-statistics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background: var(--bg-secondary);
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-card .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: block;
+}
+
+.stat-card .stat-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .batch-processor-container {
+        padding: 16px;
+        margin: 10px 0;
+    }
+    
+    .batch-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .batch-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .batch-control-buttons {
+        flex-direction: column;
+    }
+    
+    .batch-control-buttons .btn {
+        min-width: auto;
+    }
+    
+    .task-items {
+        max-height: 200px;
+    }
+    
+    .batch-statistics {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .batch-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .stat-item {
+        justify-content: space-between;
+    }
+}
+
+/* 加载动画 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 进度条动画 */
+.progress-fill.animated {
+    background: linear-gradient(90deg, 
+        var(--primary-color) 0%, 
+        #8b5cf6 25%, 
+        var(--primary-color) 50%, 
+        #8b5cf6 75%, 
+        var(--primary-color) 100%
+    );
+    background-size: 200% 100%;
+    animation: progressShimmer 2s linear infinite;
+}
+
+@keyframes progressShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* 错误状态 */
+.batch-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+/* 成功状态 */
+.batch-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+/* 空状态 */
+.batch-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-tertiary);
+}
+
+.batch-empty-state i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.batch-empty-state h4 {
+    margin: 0 0 8px 0;
+    color: var(--text-secondary);
+}
+
+.batch-empty-state p {
+    margin: 0;
+    font-size: 14px;
+}

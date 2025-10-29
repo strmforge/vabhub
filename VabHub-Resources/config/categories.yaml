@@ -1,0 +1,176 @@
+# 媒体分类配置
+# 定义媒体文件的自动分类规则
+
+categories:
+  # 电影分类
+  movie:
+    name: "电影"
+    description: "电影作品"
+    patterns:
+      - "*电影*"
+      - "*Movie*"
+      - "*Cinema*"
+      - "*Film*"
+    file_patterns:
+      - "*.mp4"
+      - "*.mkv"
+      - "*.avi"
+    
+  # 电视剧分类
+  tv_show:
+    name: "电视剧"
+    description: "电视剧集"
+    patterns:
+      - "*剧集*"
+      - "*TV*"
+      - "*Season*"
+      - "*Episode*"
+      - "*S\d{2}E\d{2}*"
+    file_patterns:
+      - "*.mp4"
+      - "*.mkv"
+      - "*.avi"
+    
+  # 音乐分类
+  music:
+    name: "音乐"
+    description: "音乐作品"
+    patterns:
+      - "*音乐*"
+      - "*Music*"
+      - "*Album*"
+      - "*Track*"
+    file_patterns:
+      - "*.mp3"
+      - "*.flac"
+      - "*.wav"
+      - "*.aac"
+    
+  # 纪录片分类
+  documentary:
+    name: "纪录片"
+    description: "纪录片作品"
+    patterns:
+      - "*纪录片*"
+      - "*Documentary*"
+      - "*Doc*"
+    
+  # 动画分类
+  animation:
+    name: "动画"
+    description: "动画作品"
+    patterns:
+      - "*动画*"
+      - "*Anime*"
+      - "*Cartoon*"
+    
+  # 教育分类
+  education:
+    name: "教育"
+    description: "教育内容"
+    patterns:
+      - "*教程*"
+      - "*教学*"
+      - "*教育*"
+      - "*Tutorial*"
+    
+  # 体育分类
+  sports:
+    name: "体育"
+    description: "体育赛事"
+    patterns:
+      - "*体育*"
+      - "*Sports*"
+      - "*比赛*"
+    
+  # 新闻分类
+  news:
+    name: "新闻"
+    description: "新闻资讯"
+    patterns:
+      - "*新闻*"
+      - "*News*"
+      - "*报道*"
+
+# 质量等级配置
+quality_levels:
+  # 视频质量
+  video:
+    8k:
+      resolution: "7680x4320"
+      bitrate: "50-100 Mbps"
+    
+    4k:
+      resolution: "3840x2160"
+      bitrate: "20-50 Mbps"
+    
+    1080p:
+      resolution: "1920x1080"
+      bitrate: "5-15 Mbps"
+    
+    720p:
+      resolution: "1280x720"
+      bitrate: "2-5 Mbps"
+    
+    480p:
+      resolution: "854x480"
+      bitrate: "1-2 Mbps"
+  
+  # 音频质量
+  audio:
+    lossless:
+      format: "FLAC"
+      bit_depth: 24
+      sample_rate: "96kHz"
+    
+    high:
+      format: "AAC"
+      bitrate: "320 kbps"
+    
+    standard:
+      format: "MP3"
+      bitrate: "192 kbps"
+    
+    low:
+      format: "MP3"
+      bitrate: "128 kbps"
+
+# 编码格式配置
+codecs:
+  video:
+    h265: "H.265/HEVC"
+    h264: "H.264/AVC"
+    vp9: "VP9"
+    av1: "AV1"
+  
+  audio:
+    aac: "AAC"
+    ac3: "AC3"
+    dts: "DTS"
+    flac: "FLAC"
+    mp3: "MP3"
+
+# 发布组配置
+release_groups:
+  # 知名发布组
+  famous:
+    - "CMCT"
+    - "FRDS"
+    - "WIKI"
+    - "CHD"
+    - "BEIT"
+  
+  # 质量标识
+  quality_marks:
+    - "REMUX"
+    - "BluRay"
+    - "WEB-DL"
+    - "HDTV"
+    - "DVD"
+  
+  # 特殊版本
+  special_editions:
+    - "Director's Cut"
+    - "Extended Edition"
+    - "Unrated"
+    - "Theatrical Cut"

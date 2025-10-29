@@ -1,0 +1,247 @@
+# VabHub排行榜配置文件
+# 基于media-oneclick和MoviePilot的最佳实践
+
+# 数据源配置
+sources:
+  # 音乐类数据源
+  spotify:
+    enabled: true
+    api_key: ${SPOTIFY_API_KEY:demo_spotify_key}
+    charts:
+      global_top_50:
+        name: "全球Top 50"
+        endpoint: "/playlists/37i9dQZEVXbMDoHDwVN2tF"
+        limit: 50
+      new_releases:
+        name: "新歌榜"
+        endpoint: "/browse/new-releases"
+        limit: 20
+      top_hits:
+        name: "热门歌曲"
+        endpoint: "/playlists/37i9dQZEVXbLRQDuF5jeBp"
+        limit: 100
+
+  netease:
+    enabled: true
+    cookie: ${NETEASE_COOKIE:demo_netease_cookie}
+    charts:
+      hot_songs:
+        name: "热歌榜"
+        endpoint: "/playlist/detail?id=3778678"
+        limit: 100
+      new_songs:
+        name: "新歌榜"
+        endpoint: "/playlist/detail?id=3779629"
+        limit: 100
+      original_songs:
+        name: "原创榜"
+        endpoint: "/playlist/detail?id=2884035"
+        limit: 50
+      rising_songs:
+        name: "飙升榜"
+        endpoint: "/playlist/detail?id=19723756"
+        limit: 100
+
+  qq_music:
+    enabled: true
+    api_key: ${QQ_MUSIC_API_KEY:demo_qq_music_key}
+    charts:
+      hot_songs:
+        name: "热歌榜"
+        endpoint: "/v8/fcg-bin/fcg_v8_toplist_cp.fcg"
+        limit: 100
+      new_songs:
+        name: "新歌榜"
+        endpoint: "/v8/fcg-bin/fcg_v8_toplist_cp.fcg"
+        limit: 100
+      rising_songs:
+        name: "飙升榜"
+        endpoint: "/v8/fcg-bin/fcg_v8_toplist_cp.fcg"
+        limit: 100
+
+  apple_music:
+    enabled: true
+    api_key: ${APPLE_MUSIC_API_KEY:demo_apple_music_key}
+    charts:
+      top_songs:
+        name: "热门歌曲"
+        endpoint: "/search"
+        limit: 100
+      recommended_playlists:
+        name: "推荐歌单"
+        endpoint: "/catalog/us/playlists"
+        limit: 20
+
+  # 影视类数据源
+  tmdb:
+    enabled: true
+    api_key: ${TMDB_API_KEY:db55323b8d3e4154498498a75642b381}
+    charts:
+      trending_movies:
+        name: "热门电影"
+        endpoint: "/trending/movie/week"
+        limit: 20
+      trending_tv:
+        name: "热门电视剧"
+        endpoint: "/trending/tv/week"
+        limit: 20
+      popular_movies:
+        name: "流行电影"
+        endpoint: "/movie/popular"
+        limit: 20
+      top_rated_movies:
+        name: "高分电影"
+        endpoint: "/movie/top_rated"
+        limit: 20
+
+  douban:
+    enabled: true
+    api_key: ${DOUBAN_API_KEY:0ab215a8b1977939201640fa14c66bab}
+    charts:
+      movie_top_250:
+        name: "电影Top 250"
+        endpoint: "/subject_collection/movie_top250/items"
+        limit: 50
+      hot_movies:
+        name: "热映电影"
+        endpoint: "/subject_collection/movie_showing/items"
+        limit: 20
+      reputation_movies:
+        name: "口碑电影"
+        endpoint: "/subject_collection/movie_hot_gaia/items"
+        limit: 20
+      hot_tv:
+        name: "热门电视剧"
+        endpoint: "/subject_collection/tv_hot/items"
+        limit: 20
+      tv_animation:
+        name: "动画剧集"
+        endpoint: "/subject_collection/tv_animation/items"
+        limit: 20
+      tv_chinese_best_weekly:
+        name: "华语口碑周榜"
+        endpoint: "/subject_collection/tv_chinese_best_weekly/items"
+        limit: 20
+      tv_global_best_weekly:
+        name: "全球口碑周榜"
+        endpoint: "/subject_collection/tv_global_best_weekly/items"
+        limit: 20
+
+  imdb:
+    enabled: true
+    api_key: ${IMDB_API_KEY}
+    charts:
+      top_250_movies:
+        name: "Top 250电影"
+        endpoint: "/API/Top250Movies"
+        limit: 50
+      popular_movies:
+        name: "热门电影"
+        endpoint: "/API/MostPopularMovies"
+        limit: 20
+
+  maoyan:
+    enabled: true
+    api_key: ${MAOYAN_API_KEY}
+    charts:
+      realtime_box_office:
+        name: "实时票房"
+        endpoint: "/dashboard-ajax"
+        limit: 20
+      hot_movies:
+        name: "热映电影"
+        endpoint: "/movie/list"
+        limit: 20
+
+  # 电视剧数据源
+  mydramalist:
+    enabled: true
+    api_key: ${MYDRAMALIST_API_KEY}
+    charts:
+      japanese_drama_top:
+        name: "日剧排行榜"
+        endpoint: "/api/top/japanese"
+        limit: 20
+      korean_drama_top:
+        name: "韩剧排行榜"
+        endpoint: "/api/top/korean"
+        limit: 20
+
+  viki:
+    enabled: true
+    api_key: ${VIKI_API_KEY}
+    charts:
+      popular_asian_dramas:
+        name: "热门亚洲剧"
+        endpoint: "/v4/shows.json"
+        limit: 20
+
+  tvmaze:
+    enabled: true
+    api_key: ${TVMAZE_API_KEY}
+    charts:
+      popular_tv_shows:
+        name: "热门电视剧"
+        endpoint: "/shows"
+        limit: 20
+
+  trakt:
+    enabled: true
+    api_key: ${TRAKT_API_KEY}
+    charts:
+      trending_tv_shows:
+        name: "趋势电视剧"
+        endpoint: "/shows/trending"
+        limit: 20
+
+# 缓存配置
+cache:
+  ttl: 3600  # 缓存时间（秒）
+  max_size: 1000  # 最大缓存项数
+
+# 聚合策略
+aggregation:
+  strategy: "weighted_rank"  # 加权排名策略
+  weights:
+    popularity: 0.4
+    score: 0.3
+    release_date: 0.2
+    source_reliability: 0.1
+
+# 请求配置
+request:
+  timeout: 30  # 请求超时时间（秒）
+  retry_times: 3  # 重试次数
+  retry_delay: 2  # 重试延迟（秒）
+
+# 排行榜类型映射
+chart_types:
+  music:
+    name: "音乐榜"
+    sources: ["spotify", "netease", "qq_music", "apple_music"]
+    default_limit: 50
+  
+  movie:
+    name: "电影榜"
+    sources: ["tmdb", "douban", "imdb", "maoyan"]
+    default_limit: 20
+  
+  tv:
+    name: "电视剧榜"
+    sources: ["tmdb", "douban", "mydramalist", "viki", "tvmaze", "trakt"]
+    default_limit: 20
+  
+  anime:
+    name: "动漫榜"
+    sources: ["tmdb", "douban", "mydramalist"]
+    default_limit: 20
+  
+  documentary:
+    name: "纪录片榜"
+    sources: ["tmdb", "douban"]
+    default_limit: 20
+  
+  variety:
+    name: "综艺榜"
+    sources: ["douban"]
+    default_limit: 20

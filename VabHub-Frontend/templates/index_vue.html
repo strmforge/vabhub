@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VabHub - 智能媒体管理平台</title>
+    
+    <!-- Vue 3 + Vuetify 3.3.0 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuetify@3.3.0/dist/vuetify.js"></script>
+    <link href="https://unpkg.com/vuetify@3.3.0/dist/vuetify.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .vabhub-app {
+            min-height: 100vh;
+        }
+        
+        .vabhub-navbar {
+            background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+            box-shadow: 0 2px 12px rgba(25, 118, 210, 0.3);
+        }
+        
+        .vabhub-sidebar {
+            background: #263238;
+            color: white;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+        
+        .vabhub-content {
+            background: #fafafa;
+            min-height: calc(100vh - 64px);
+            padding: 24px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #1976D2;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card.video { border-left-color: #F44336; }
+        .stat-card.audio { border-left-color: #2196F3; }
+        .stat-card.image { border-left-color: #4CAF50; }
+        .stat-card.document { border-left-color: #FF9800; }
+        
+        .file-item {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 8px;
+            border-left: 3px solid #1976D2;
+            transition: all 0.3s ease;
+        }
+        
+        .file-item:hover {
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            transform: translateX(4px);
+        }
+        
+        .progress-custom {
+            height: 8px;
+            border-radius: 4px;
+            background: #e0e0e0;
+            overflow: hidden;
+        }
+        
+        .progress-bar-custom {
+            height: 100%;
+            background: linear-gradient(90deg, #1976D2, #64B5F6);
+            transition: width 0.5s ease;
+        }
+        
+        .nav-item-active {
+            background: rgba(255,255,255,0.1) !important;
+            border-left: 3px solid #1976D2 !important;
+        }
+        
+        .system-status {
+            background: linear-gradient(135deg, #1976D2, #1565C0);
+            color: white;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        @media (max-width: 960px) {
+            .vabhub-content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <v-app class="vabhub-app">
+            <!-- 顶部导航栏 -->
+            <v-app-bar class="vabhub-navbar" elevation="2" color="primary" dark>
+                <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+                
+                <v-toolbar-title class="font-weight-bold">
+                    <v-icon icon="fas fa-film" class="mr-2"></v-icon>
+                    VabHub
+                </v-toolbar-title>
+                
+                <v-spacer></v-spacer>
+                
+                <v-btn icon>
+                    <v-icon>fas fa-bell</v-icon>
+                </v-btn>
+                
+                <v-menu>
+                    <template v-slot:activator="{ props }">
+                        <v-btn icon v-bind="props">
+                            <v-icon>fas fa-user</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-item>
+                            <v-list-item-title>
+                                <v-icon icon="fas fa-cog" class="mr-2"></v-icon>
+                                系统设置
+                            </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-list-item-title>
+                                <v-icon icon="fas fa-sign-out-alt" class="mr-2"></v-icon>
+                                退出登录
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-app-bar>
+
+            <!-- 侧边导航 -->
+            <v-navigation-drawer
+                v-model="drawer"
+                class="vabhub-sidebar"
+                permanent
+                :width="280"
+            >
+                <v-list dense nav class="mt-4">
+                    <v-list-item
+                        v-for="item in navItems"
+                        :key="item.title"
+                        :prepend-icon="item.icon"
+                        :title="item.title"
+                        :value="item.title"
+                        :class="{ 'nav-item-active': activeNav === item.title }"
+                        @click="activeNav = item.title"
+                        class="mb-2"
+                    ></v-list-item>
+                </v-list>
+                
+                <!-- 系统状态卡片 -->
+                <v-card class="mx-4 mt-8 system-status" elevation="4">
+                    <v-card-text>
+                        <div class="text-h6 mb-2">系统状态</div>
+                        <v-row dense>
+                            <v-col cols="6">
+                                <div class="text-caption">CPU使用率</div>
+                                <div class="text-h5">{{ systemStats.cpu }}%</div>
+                            </v-col>
+                            <v-col cols="6">
+                                <div class="text-caption">内存使用</div>
+                                <div class="text-h5">{{ systemStats.memory }}%</div>
+                            </v-col>
+                            <v-col cols="6">
+                                <div class="text-caption">磁盘空间</div>
+                                <div class="text-h5">{{ systemStats.disk }}%</div>
+                            </v-col>
+                            <v-col cols="6">
+                                <div class="text-caption">网络速度</div>
+                                <div class="text-h5">{{ systemStats.network }}</div>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
+            </v-navigation-drawer>
+
+            <!-- 主内容区域 -->
+            <v-main class="vabhub-content">
+                <!-- 仪表板 -->
+                <div v-if="activeNav === '仪表板'">
+                    <v-row>
+                        <v-col cols="12">
+                            <v-card elevation="2" class="pa-4">
+                                <v-card-title class="text-h5 font-weight-bold">
+                                    <v-icon icon="fas fa-tachometer-alt" class="mr-2"></v-icon>
+                                    系统概览
+                                </v-card-title>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+
+                    <!-- 统计卡片 -->
+                    <v-row class="mt-4">
+                        <v-col cols="12" sm="6" md="3">
+                            <v-card class="stat-card video" elevation="2">
+                                <v-card-text>
+                                    <div class="d-flex align-center">
+                                        <v-icon icon="fas fa-film" color="red" size="40" class="mr-3"></v-icon>
+                                        <div>
+                                            <div class="text-h4 font-weight-bold">{{ stats.mediaFiles }}</div>
+                                            <div class="text-caption text-grey">媒体文件</div>
+                                        </div>
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        
+                        <v-col cols="12" sm="6" md="3">
+                            <v-card class="stat-card audio" elevation="2">
+                                <v-card-text>
+                                    <div class="d-flex align-center">
+                                        <v-icon icon="fas fa-check-circle" color="green" size="40" class="mr-3"></v-icon>
+                                        <div>
+                                            <div class="text-h4 font-weight-bold">{{ stats.processed }}</div>
+                                            <div class="text-caption text-grey">已处理</div>
+                                        </div>
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        
+                        <v-col cols="12" sm="6" md="3">
+                            <v-card class="stat-card image" elevation="2">
+                                <v-card-text>
+                                    <div class="d-flex align-center">
+                                        <v-icon icon="fas fa-sync-alt" color="orange" size="40" class="mr-3"></v-icon>
+                                        <div>
+                                            <div class="text-h4 font-weight-bold">{{ stats.processing }}</div>
+                                            <div class="text-caption text-grey">进行中</div>
+                                        </div>
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        
+                        <v-col cols="12" sm="6" md="3">
+                            <v-card class="stat-card document" elevation="2">
+                                <v-card-text>
+                                    <div class="d-flex align-center">
+                                        <v-icon icon="fas fa-clock" color="blue" size="40" class="mr-3"></v-icon>
+                                        <div>
+                                            <div class="text-h4 font-weight-bold">{{ stats.pending }}</div>
+                                            <div class="text-caption text-grey">待处理</div>
+                                        </div>
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+
+                    <!-- 进度监控和文件列表 -->
+                    <v-row class="mt-4">
+                        <v-col cols="12" md="8">
+                            <v-card elevation="2" class="pa-4">
+                                <v-card-title class="text-h6">
+                                    <v-icon icon="fas fa-tasks" class="mr-2"></v-icon>
+                                    任务进度
+                                </v-card-title>
+                                
+                                <v-card-text>
+                                    <div v-for="task in tasks" :key="task.name" class="mb-4">
+                                        <div class="d-flex justify-space-between mb-2">
+                                            <span class="font-weight-medium">{{ task.name }}</span>
+                                            <span>{{ task.progress }}%</span>
+                                        </div>
+                                        <div class="progress-custom">
+                                            <div class="progress-bar-custom" :style="{ width: task.progress + '%' }"></div>
+                                        </div>
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        
+                        <v-col cols="12" md="4">
+                            <v-card elevation="2" class="pa-4">
+                                <v-card-title class="text-h6">
+                                    <v-icon icon="fas fa-chart-pie" class="mr-2"></v-icon>
+                                    文件类型分布
+                                </v-card-title>
+                                <v-card-text>
+                                    <canvas id="fileTypeChart" width="200" height="200"></canvas>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+
+                    <!-- 最近文件 -->
+                    <v-row class="mt-4">
+                        <v-col cols="12">
+                            <v-card elevation="2" class="pa-4">
+                                <v-card-title class="text-h6">
+                                    <v-icon icon="fas fa-history" class="mr-2"></v-icon>
+                                    最近处理的文件
+                                </v-card-title>
+                                
+                                <v-card-text>
+                                    <div v-for="file in recentFiles" :key="file.name" class="file-item">
+                                        <div class="d-flex align-center justify-space-between">
+                                            <div class="d-flex align-center">
+                                                <v-icon 
+                                                    :icon="file.icon" 
+                                                    :color="file.color" 
+                                                    size="24" 
+                                                    class="mr-3"
+                                                ></v-icon>
+                                                <div>
+                                                    <div class="font-weight-medium">{{ file.name }}</div>
+                                                    <div class="text-caption text-grey">{{ file.path }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <v-chip :color="file.statusColor" size="small">{{ file.status }}</v-chip>
+                                                <div class="text-caption text-grey mt-1">{{ file.time }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </div>
+
+                <!-- 音乐管理页面 -->
+                <div v-else-if="activeNav === '音乐管理'">
+                    <v-row>
+                        <v-col cols="12">
+                            <v-card elevation="2" class="pa-4">
+                                <v-card-title class="text-h5 font-weight-bold">
+                                    <v-icon icon="fas fa-music" class="mr-2"></v-icon>
+                                    音乐管理
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-tabs v-model="musicTab" color="primary">
+                                        <v-tab value="upload">
+                                            <v-icon icon="fas fa-upload" class="mr-2"></v-icon>
+                                            上传音乐
+                                        </v-tab>
+                                        <v-tab value="scrape">
+                                            <v-icon icon="fas fa-search" class="mr-2"></v-icon>
+                                            音乐刮削
+                                        </v-tab>
+                                        <v-tab value="library">
+                                            <v-icon icon="fas fa-list" class="mr-2"></v-icon>
+                                            音乐库
+                                        </v-tab>
+                                        <v-tab value="statistics">
+                                            <v-icon icon="fas fa-chart-bar" class="mr-2"></v-icon>
+                                            统计信息
+                                        </v-tab>
+                                    </v-tabs>
+
+                                    <v-window v-model="musicTab" class="mt-4">
+                                        <!-- 上传音乐标签页 -->
+                                        <v-window-item value="upload">
+                                            <v-card elevation="1" class="pa-4">
+                                                <v-card-title class="text-h6">上传音乐文件</v-card-title>
+                                                <v-card-text>
+                                                    <v-file-input
+                                                        v-model="musicFiles"
+                                                        label="选择音乐文件"
+                                                        multiple
+                                                        accept=".mp3,.flac,.wav,.ogg,.m4a,.aac"
+                                                        prepend-icon="fas fa-music"
+                                                        :loading="uploading"
+                                                        @change="handleMusicUpload"
+                                                    ></v-file-input>
+                                                    
+                                                    <v-alert v-if="uploadResult" :type="uploadResult.type" class="mt-3">
+                                                        {{ uploadResult.message }}
+                                                    </v-alert>
+
+                                                    <v-progress-linear
+                                                        v-if="uploadProgress > 0"
+                                                        :model-value="uploadProgress"
+                                                        color="primary"
+                                                        class="mt-3"
+                                                    ></v-progress-linear>
+
+                                                    <v-list v-if="uploadedFiles.length > 0" class="mt-4">
+                                                        <v-list-subheader>已上传文件</v-list-subheader>
+                                                        <v-list-item
+                                                            v-for="file in uploadedFiles"
+                                                            :key="file.name"
+                                                            :prepend-icon="getFileIcon(file.name)"
+                                                        >
+                                                            <v-list-item-title>{{ file.name }}</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ file.size }} bytes</v-list-item-subtitle>
+                                                            <template v-slot:append>
+                                                                <v-chip :color="file.status === 'success' ? 'success' : 'warning'" size="small">
+                                                                    {{ file.status === 'success' ? '已处理' : '处理中' }}
+                                                                </v-chip>
+                                                            </template>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-window-item>
+
+                                        <!-- 音乐刮削标签页 -->
+                                        <v-window-item value="scrape">
+                                            <v-card elevation="1" class="pa-4">
+                                                <v-card-title class="text-h6">音乐刮削工具</v-card-title>
+                                                <v-card-text>
+                                                    <v-row>
+                                                        <v-col cols="12" md="6">
+                                                            <v-text-field
+                                                                v-model="scrapePath"
+                                                                label="音乐文件夹路径"
+                                                                placeholder="/path/to/music/folder"
+                                                                prepend-icon="fas fa-folder"
+                                                            ></v-text-field>
+                                                        </v-col>
+                                                        <v-col cols="12" md="6">
+                                                            <v-btn 
+                                                                color="primary" 
+                                                                @click="startScraping"
+                                                                :loading="scraping"
+                                                                block
+                                                            >
+                                                                <v-icon icon="fas fa-search" class="mr-2"></v-icon>
+                                                                开始刮削
+                                                            </v-btn>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                    <v-switch
+                                                        v-model="scrapeOptions.useFingerprint"
+                                                        label="使用音频指纹识别"
+                                                        color="primary"
+                                                        class="mt-3"
+                                                    ></v-switch>
+                                                    <v-switch
+                                                        v-model="scrapeOptions.useMetadata"
+                                                        label="使用元数据搜索"
+                                                        color="primary"
+                                                    ></v-switch>
+
+                                                    <v-alert v-if="scrapeResult" :type="scrapeResult.type" class="mt-3">
+                                                        {{ scrapeResult.message }}
+                                                    </v-alert>
+
+                                                    <v-progress-linear
+                                                        v-if="scrapeProgress > 0"
+                                                        :model-value="scrapeProgress"
+                                                        color="primary"
+                                                        class="mt-3"
+                                                    ></v-progress-linear>
+
+                                                    <v-list v-if="scrapedFiles.length > 0" class="mt-4">
+                                                        <v-list-subheader>刮削结果</v-list-subheader>
+                                                        <v-list-item
+                                                            v-for="file in scrapedFiles"
+                                                            :key="file.path"
+                                                            :prepend-icon="getFileIcon(file.path)"
+                                                        >
+                                                            <v-list-item-title>{{ file.title || file.name }}</v-list-item-title>
+                                                            <v-list-item-subtitle>
+                                                                {{ file.artist || '未知艺术家' }} - {{ file.album || '未知专辑' }}
+                                                            </v-list-item-subtitle>
+                                                            <template v-slot:append>
+                                                                <v-chip :color="file.success ? 'success' : 'error'" size="small">
+                                                                    {{ file.success ? '成功' : '失败' }}
+                                                                </v-chip>
+                                                            </template>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-window-item>
+
+                                        <!-- 音乐库标签页 -->
+                                        <v-window-item value="library">
+                                            <v-card elevation="1" class="pa-4">
+                                                <v-card-title class="text-h6">音乐库管理</v-card-title>
+                                                <v-card-text>
+                                                    <v-row>
+                                                        <v-col cols="12" md="6">
+                                                            <v-text-field
+                                                                v-model="searchQuery"
+                                                                label="搜索音乐"
+                                                                placeholder="输入歌曲名、艺术家或专辑"
+                                                                prepend-icon="fas fa-search"
+                                                                clearable
+                                                            ></v-text-field>
+                                                        </v-col>
+                                                        <v-col cols="12" md="6">
+                                                            <v-select
+                                                                v-model="filterGenre"
+                                                                :items="genres"
+                                                                label="筛选流派"
+                                                                clearable
+                                                            ></v-select>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                    <v-data-table
+                                                        :headers="musicLibraryHeaders"
+                                                        :items="musicLibrary"
+                                                        :search="searchQuery"
+                                                        :items-per-page="10"
+                                                        class="elevation-1 mt-3"
+                                                    >
+                                                        <template v-slot:item.actions="{ item }">
+                                                            <v-btn icon size="small" @click="playMusic(item)">
+                                                                <v-icon icon="fas fa-play" color="primary"></v-icon>
+                                                            </v-btn>
+                                                            <v-btn icon size="small" @click="editMusic(item)">
+                                                                <v-icon icon="fas fa-edit" color="warning"></v-icon>
+                                                            </v-btn>
+                                                            <v-btn icon size="small" @click="deleteMusic(item)">
+                                                                <v-icon icon="fas fa-trash" color="error"></v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                    </v-data-table>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-window-item>
+
+                                        <!-- 统计信息标签页 -->
+                                        <v-window-item value="statistics">
+                                            <v-card elevation="1" class="pa-4">
+                                                <v-card-title class="text-h6">音乐统计信息</v-card-title>
+                                                <v-card-text>
+                                                    <v-row>
+                                                        <v-col cols="12" sm="6" md="3">
+                                                            <v-card class="stat-card audio" elevation="2">
+                                                                <v-card-text>
+                                                                    <div class="d-flex align-center">
+                                                                        <v-icon icon="fas fa-music" color="blue" size="40" class="mr-3"></v-icon>
+                                                                        <div>
+                                                                            <div class="text-h4 font-weight-bold">{{ musicStats.totalFiles }}</div>
+                                                                            <div class="text-caption text-grey">音乐文件</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </v-card-text>
+                                                            </v-card>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="6" md="3">
+                                                            <v-card class="stat-card audio" elevation="2">
+                                                                <v-card-text>
+                                                                    <div class="d-flex align-center">
+                                                                        <v-icon icon="fas fa-check-circle" color="green" size="40" class="mr-3"></v-icon>
+                                                                        <div>
+                                                                            <div class="text-h4 font-weight-bold">{{ musicStats.successfulScrapes }}</div>
+                                                                            <div class="text-caption text-grey">成功刮削</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </v-card-text>
+                                                            </v-card>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="6" md="3">
+                                                            <v-card class="stat-card audio" elevation="2">
+                                                                <v-card-text>
+                                                                    <div class="d-flex align-center">
+                                                                        <v-icon icon="fas fa-percentage" color="orange" size="40" class="mr-3"></v-icon>
+                                                                        <div>
+                                                                            <div class="text-h4 font-weight-bold">{{ musicStats.successRate.toFixed(1) }}%</div>
+                                                                            <div class="text-caption text-grey">成功率</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </v-card-text>
+                                                            </v-card>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="6" md="3">
+                                                            <v-card class="stat-card audio" elevation="2">
+                                                                <v-card-text>
+                                                                    <div class="d-flex align-center">
+                                                                        <v-icon icon="fas fa-database" color="purple" size="40" class="mr-3"></v-icon>
+                                                                        <div>
+                                                                            <div class="text-h4 font-weight-bold">{{ Object.keys(musicStats.sourceDistribution).length }}</div>
+                                                                            <div class="text-caption text-grey">数据源</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </v-card-text>
+                                                            </v-card>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                    <v-row class="mt-4">
+                                                        <v-col cols="12" md="6">
+                                                            <v-card elevation="1" class="pa-3">
+                                                                <v-card-title class="text-h6">数据源分布</v-card-title>
+                                                                <v-card-text>
+                                                                    <canvas id="musicSourceChart" width="300" height="200"></canvas>
+                                                                </v-card-text>
+                                                            </v-card>
+                                                        </v-col>
+                                                        <v-col cols="12" md="6">
+                                                            <v-card elevation="1" class="pa-3">
+                                                                <v-card-title class="text-h6">流派分布</v-card-title>
+                                                                <v-card-text>
+                                                                    <canvas id="genreChart" width="300" height="200"></canvas>
+                                                                </v-card-text>
+                                                            </v-card>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-window-item>
+                                    </v-window>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </div>
+
+                <!-- 其他页面内容 -->
+                <div v-else>
+                    <v-card elevation="2" class="pa-4">
+                        <v-card-title class="text-h5 font-weight-bold">
+                            <v-icon :icon="getCurrentNavIcon()" class="mr-2"></v-icon>
+                            {{ activeNav }}
+                        </v-card-title>
+                        <v-card-text>
+                            <p class="text-grey">正在开发中...</p>
+                        </v-card-text>
+                    </v-card>
+                </div>
+            </v-main>
+        </v-app>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+        const { createVuetify } = Vuetify;
+
+        const vuetify = createVuetify();
+
+        const app = createApp({
+            data() {
+                return {
+                    drawer: true,
+                    activeNav: '仪表板',
+                    navItems: [
+                        { title: '仪表板', icon: 'fas fa-tachometer-alt' },
+                        { title: '文件扫描', icon: 'fas fa-search' },
+                        { title: '智能重命名', icon: 'fas fa-edit' },
+                        { title: '批量处理', icon: 'fas fa-tasks' },
+                        { title: '音乐管理', icon: 'fas fa-music' },
+                        { title: '系统设置', icon: 'fas fa-cog' },
+                        { title: '系统监控', icon: 'fas fa-chart-line' }
+                    ],
+                    stats: {
+                        mediaFiles: 1284,
+                        processed: 856,
+                        processing: 128,
+                        pending: 300
+                    },
+                    tasks: [
+                        { name: '视频文件重命名', progress: 65 },
+                        { name: '音频文件整理', progress: 42 },
+                        { name: '图片文件分类', progress: 78 }
+                    ],
+                    recentFiles: [
+                        { 
+                            name: '权力的游戏.S01E01.1080p.mkv', 
+                            path: '/media/videos/', 
+                            icon: 'fas fa-video', 
+                            color: 'red', 
+                            status: '已重命名', 
+                            statusColor: 'success', 
+                            time: '2分钟前' 
+                        },
+                        { 
+                            name: '周杰伦-七里香.mp3', 
+                            path: '/media/music/', 
+                            icon: 'fas fa-music', 
+                            color: 'blue', 
+                            status: '处理中', 
+                            statusColor: 'warning', 
+                            time: '5分钟前' 
+                        },
+                        { 
+                            name: '风景照片.jpg', 
+                            path: '/media/pictures/', 
+                            icon: 'fas fa-image', 
+                            color: 'green', 
+                            status: '待处理', 
+                            statusColor: 'primary', 
+                            time: '10分钟前' 
+                        }
+                    ],
+                    systemStats: {
+                        cpu: 24,
+                        memory: 68,
+                        disk: 82,
+                        network: '156M/s'
+                    },
+                    
+                    // 音乐管理相关数据
+                    musicTab: 'upload',
+                    musicFiles: [],
+                    uploading: false,
+                    uploadProgress: 0,
+                    uploadResult: null,
+                    uploadedFiles: [],
+                    
+                    scrapePath: '',
+                    scraping: false,
+                    scrapeProgress: 0,
+                    scrapeResult: null,
+                    scrapedFiles: [],
+                    scrapeOptions: {
+                        useFingerprint: true,
+                        useMetadata: true
+                    },
+                    
+                    searchQuery: '',
+                    filterGenre: '',
+                    genres: ['流行', '摇滚', '古典', '爵士', '电子', '民谣', '嘻哈', 'R&B'],
+                    
+                    musicLibraryHeaders: [
+                        { title: '歌曲名', key: 'title', sortable: true },
+                        { title: '艺术家', key: 'artist', sortable: true },
+                        { title: '专辑', key: 'album', sortable: true },
+                        { title: '年份', key: 'year', sortable: true },
+                        { title: '流派', key: 'genre', sortable: true },
+                        { title: '时长', key: 'duration', sortable: true },
+                        { title: '操作', key: 'actions', sortable: false }
+                    ],
+                    
+                    musicLibrary: [
+                        {
+                            title: '七里香',
+                            artist: '周杰伦',
+                            album: '七里香',
+                            year: '2004',
+                            genre: '流行',
+                            duration: '4:35',
+                            path: '/media/music/七里香.mp3'
+                        },
+                        {
+                            title: '青花瓷',
+                            artist: '周杰伦',
+                            album: '我很忙',
+                            year: '2007',
+                            genre: '流行',
+                            duration: '3:52',
+                            path: '/media/music/青花瓷.mp3'
+                        },
+                        {
+                            title: '夜曲',
+                            artist: '周杰伦',
+                            album: '十一月的萧邦',
+                            year: '2005',
+                            genre: '流行',
+                            duration: '4:15',
+                            path: '/media/music/夜曲.mp3'
+                        }
+                    ],
+                    
+                    musicStats: {
+                        totalFiles: 156,
+                        successfulScrapes: 142,
+                        successRate: 91.0,
+                        sourceDistribution: {
+                            'file_tags': 89,
+                            'musicbrainz_search': 45,
+                            'acoustid_fingerprint': 32
+                        }
+                    },
+                    
+                    // 音乐管理相关数据
+                    musicTab: 'upload',
+                    musicFiles: [],
+                    uploading: false,
+                    uploadProgress: 0,
+                    uploadResult: null,
+                    uploadedFiles: [],
+                    
+                    scrapePath: '',
+                    scraping: false,
+                    scrapeProgress: 0,
+                    scrapeResult: null,
+                    scrapedFiles: [],
+                    scrapeOptions: {
+                        useFingerprint: true,
+                        useMetadata: true
+                    },
+                    
+                    searchQuery: '',
+                    filterGenre: '',
+                    genres: ['流行', '摇滚', '古典', '爵士', '电子', '民谣', '嘻哈', 'R&B'],
+                    
+                    musicLibraryHeaders: [
+                        { title: '歌曲名', key: 'title', sortable: true },
+                        { title: '艺术家', key: 'artist', sortable: true },
+                        { title: '专辑', key: 'album', sortable: true },
+                        { title: '年份', key: 'year', sortable: true },
+                        { title: '流派', key: 'genre', sortable: true },
+                        { title: '时长', key: 'duration', sortable: true },
+                        { title: '操作', key: 'actions', sortable: false }
+                    ],
+                    
+                    musicLibrary: [
+                        {
+                            title: '七里香',
+                            artist: '周杰伦',
+                            album: '七里香',
+                            year: '2004',
+                            genre: '流行',
+                            duration: '4:35',
+                            path: '/media/music/七里香.mp3'
+                        },
+                        {
+                            title: '青花瓷',
+                            artist: '周杰伦',
+                            album: '我很忙',
+                            year: '2007',
+                            genre: '流行',
+                            duration: '3:52',
+                            path: '/media/music/青花瓷.mp3'
+                        },
+                        {
+                            title: '夜曲',
+                            artist: '周杰伦',
+                            album: '十一月的萧邦',
+                            year: '2005',
+                            genre: '流行',
+                            duration: '4:15',
+                            path: '/media/music/夜曲.mp3'
+                        }
+                    ],
+                    
+                    musicStats: {
+                        totalFiles: 156,
+                        successfulScrapes: 142,
+                        successRate: 91.0,
+                        sourceDistribution: {
+                            'file_tags': 89,
+                            'musicbrainz_search': 45,
+                            'acoustid_fingerprint': 32
+                        }
+                    }
+                }
+            },
+            methods: {
+                getCurrentNavIcon() {
+                    const item = this.navItems.find(item => item.title === this.activeNav);
+                    return item ? item.icon : 'fas fa-cog';
+                },
+                updateStats() {
+                    // 模拟实时数据更新
+                    this.systemStats.cpu = Math.max(10, Math.min(90, this.systemStats.cpu + (Math.random() * 4 - 2)));
+                    this.systemStats.memory = Math.max(20, Math.min(95, this.systemStats.memory + (Math.random() * 3 - 1.5)));
+                    
+                    // 更新任务进度
+                    this.tasks.forEach(task => {
+                        if (task.progress < 100) {
+                            task.progress = Math.min(100, task.progress + Math.random() * 2);
+                        }
+                    });
+                },
+                
+                // 音乐管理相关方法
+                getFileIcon(filename) {
+                    const ext = filename.split('.').pop().toLowerCase();
+                    const iconMap = {
+                        'mp3': 'fas fa-music',
+                        'flac': 'fas fa-music',
+                        'wav': 'fas fa-music',
+                        'ogg': 'fas fa-music',
+                        'm4a': 'fas fa-music',
+                        'aac': 'fas fa-music',
+                        'mkv': 'fas fa-video',
+                        'mp4': 'fas fa-video',
+                        'avi': 'fas fa-video',
+                        'jpg': 'fas fa-image',
+                        'png': 'fas fa-image',
+                        'gif': 'fas fa-image'
+                    };
+                    return iconMap[ext] || 'fas fa-file';
+                },
+                
+                async handleMusicUpload() {
+                    if (!this.musicFiles || this.musicFiles.length === 0) return;
+                    
+                    this.uploading = true;
+                    this.uploadProgress = 0;
+                    this.uploadResult = null;
+                    
+                    try {
+                        for (let i = 0; i < this.musicFiles.length; i++) {
+                            const file = this.musicFiles[i];
+                            
+                            // 模拟上传进度
+                            const progressInterval = setInterval(() => {
+                                this.uploadProgress += 10;
+                                if (this.uploadProgress >= 100) {
+                                    clearInterval(progressInterval);
+                                }
+                            }, 200);
+                            
+                            // 模拟API调用
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            
+                            this.uploadedFiles.push({
+                                name: file.name,
+                                size: file.size,
+                                status: 'success'
+                            });
+                            
+                            this.uploadProgress = ((i + 1) / this.musicFiles.length) * 100;
+                        }
+                        
+                        this.uploadResult = {
+                            type: 'success',
+                            message: `成功上传 ${this.musicFiles.length} 个文件`
+                        };
+                        
+                    } catch (error) {
+                        this.uploadResult = {
+                            type: 'error',
+                            message: `上传失败: ${error.message}`
+                        };
+                    } finally {
+                        this.uploading = false;
+                        this.musicFiles = [];
+                    }
+                },
+                
+                async startScraping() {
+                    if (!this.scrapePath) {
+                        this.scrapeResult = {
+                            type: 'warning',
+                            message: '请输入音乐文件夹路径'
+                        };
+                        return;
+                    }
+                    
+                    this.scraping = true;
+                    this.scrapeProgress = 0;
+                    this.scrapeResult = null;
+                    
+                    try {
+                        // 模拟刮削过程
+                        const progressInterval = setInterval(() => {
+                            this.scrapeProgress += 5;
+                            if (this.scrapeProgress >= 100) {
+                                clearInterval(progressInterval);
+                                this.finishScraping();
+                            }
+                        }, 500);
+                        
+                    } catch (error) {
+                        this.scrapeResult = {
+                            type: 'error',
+                            message: `刮削失败: ${error.message}`
+                        };
+                        this.scraping = false;
+                    }
+                },
+                
+                finishScraping() {
+                    // 模拟刮削结果
+                    this.scrapedFiles = [
+                        {
+                            path: '/media/music/周杰伦-七里香.mp3',
+                            name: '周杰伦-七里香.mp3',
+                            title: '七里香',
+                            artist: '周杰伦',
+                            album: '七里香',
+                            success: true
+                        },
+                        {
+                            path: '/media/music/青花瓷.mp3',
+                            name: '青花瓷.mp3',
+                            title: '青花瓷',
+                            artist: '周杰伦',
+                            album: '我很忙',
+                            success: true
+                        },
+                        {
+                            path: '/media/music/未知歌曲.mp3',
+                            name: '未知歌曲.mp3',
+                            title: null,
+                            artist: null,
+                            album: null,
+                            success: false
+                        }
+                    ];
+                    
+                    this.scrapeResult = {
+                        type: 'success',
+                        message: `刮削完成，成功 ${this.scrapedFiles.filter(f => f.success).length} 个，失败 ${this.scrapedFiles.filter(f => !f.success).length} 个`
+                    };
+                    
+                    this.scraping = false;
+                },
+                
+                playMusic(item) {
+                    // 模拟播放音乐
+                    console.log('播放音乐:', item.title);
+                    alert(`正在播放: ${item.artist} - ${item.title}`);
+                },
+                
+                editMusic(item) {
+                    // 模拟编辑音乐信息
+                    console.log('编辑音乐:', item.title);
+                    alert(`编辑音乐信息: ${item.artist} - ${item.title}`);
+                },
+                
+                deleteMusic(item) {
+                    // 模拟删除音乐
+                    if (confirm(`确定要删除 "${item.title}" 吗？`)) {
+                        const index = this.musicLibrary.findIndex(m => m.path === item.path);
+                        if (index !== -1) {
+                            this.musicLibrary.splice(index, 1);
+                            alert('音乐已删除');
+                        }
+                    }
+                },
+                
+                // 音乐管理相关方法
+                getFileIcon(filename) {
+                    const ext = filename.split('.').pop().toLowerCase();
+                    const iconMap = {
+                        'mp3': 'fas fa-music',
+                        'flac': 'fas fa-music',
+                        'wav': 'fas fa-music',
+                        'ogg': 'fas fa-music',
+                        'm4a': 'fas fa-music',
+                        'aac': 'fas fa-music',
+                        'mkv': 'fas fa-video',
+                        'mp4': 'fas fa-video',
+                        'avi': 'fas fa-video',
+                        'jpg': 'fas fa-image',
+                        'png': 'fas fa-image',
+                        'gif': 'fas fa-image'
+                    };
+                    return iconMap[ext] || 'fas fa-file';
+                },
+                
+                async handleMusicUpload() {
+                    if (!this.musicFiles || this.musicFiles.length === 0) return;
+                    
+                    this.uploading = true;
+                    this.uploadProgress = 0;
+                    this.uploadResult = null;
+                    
+                    try {
+                        for (let i = 0; i < this.musicFiles.length; i++) {
+                            const file = this.musicFiles[i];
+                            
+                            // 模拟上传进度
+                            const progressInterval = setInterval(() => {
+                                this.uploadProgress += 10;
+                                if (this.uploadProgress >= 100) {
+                                    clearInterval(progressInterval);
+                                }
+                            }, 200);
+                            
+                            // 模拟API调用
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            
+                            this.uploadedFiles.push({
+                                name: file.name,
+                                size: file.size,
+                                status: 'success'
+                            });
+                            
+                            this.uploadProgress = ((i + 1) / this.musicFiles.length) * 100;
+                        }
+                        
+                        this.uploadResult = {
+                            type: 'success',
+                            message: `成功上传 ${this.musicFiles.length} 个文件`
+                        };
+                        
+                    } catch (error) {
+                        this.uploadResult = {
+                            type: 'error',
+                            message: `上传失败: ${error.message}`
+                        };
+                    } finally {
+                        this.uploading = false;
+                        this.musicFiles = [];
+                    }
+                },
+                
+                async startScraping() {
+                    if (!this.scrapePath) {
+                        this.scrapeResult = {
+                            type: 'warning',
+                            message: '请输入音乐文件夹路径'
+                        };
+                        return;
+                    }
+                    
+                    this.scraping = true;
+                    this.scrapeProgress = 0;
+                    this.scrapeResult = null;
+                    
+                    try {
+                        // 模拟刮削过程
+                        const progressInterval = setInterval(() => {
+                            this.scrapeProgress += 5;
+                            if (this.scrapeProgress >= 100) {
+                                clearInterval(progressInterval);
+                                this.finishScraping();
+                            }
+                        }, 500);
+                        
+                    } catch (error) {
+                        this.scrapeResult = {
+                            type: 'error',
+                            message: `刮削失败: ${error.message}`
+                        };
+                        this.scraping = false;
+                    }
+                },
+                
+                finishScraping() {
+                    // 模拟刮削结果
+                    this.scrapedFiles = [
+                        {
+                            path: '/media/music/周杰伦-七里香.mp3',
+                            name: '周杰伦-七里香.mp3',
+                            title: '七里香',
+                            artist: '周杰伦',
+                            album: '七里香',
+                            success: true
+                        },
+                        {
+                            path: '/media/music/青花瓷.mp3',
+                            name: '青花瓷.mp3',
+                            title: '青花瓷',
+                            artist: '周杰伦',
+                            album: '我很忙',
+                            success: true
+                        },
+                        {
+                            path: '/media/music/未知歌曲.mp3',
+                            name: '未知歌曲.mp3',
+                            title: null,
+                            artist: null,
+                            album: null,
+                            success: false
+                        }
+                    ];
+                    
+                    this.scrapeResult = {
+                        type: 'success',
+                        message: `刮削完成，成功 ${this.scrapedFiles.filter(f => f.success).length} 个，失败 ${this.scrapedFiles.filter(f => !f.success).length} 个`
+                    };
+                    
+                    this.scraping = false;
+                },
+                
+                playMusic(item) {
+                    // 模拟播放音乐
+                    console.log('播放音乐:', item.title);
+                    alert(`正在播放: ${item.artist} - ${item.title}`);
+                },
+                
+                editMusic(item) {
+                    // 模拟编辑音乐信息
+                    console.log('编辑音乐:', item.title);
+                    alert(`编辑音乐信息: ${item.artist} - ${item.title}`);
+                },
+                
+                deleteMusic(item) {
+                    // 模拟删除音乐
+                    if (confirm(`确定要删除 "${item.title}" 吗？`)) {
+                        const index = this.musicLibrary.findIndex(m => m.path === item.path);
+                        if (index !== -1) {
+                            this.musicLibrary.splice(index, 1);
+                            alert('音乐已删除');
+                        }
+                    }
+                }
+            },
+            mounted() {
+                // 初始化图表
+                this.initChart();
+                
+                // 启动实时数据更新
+                setInterval(() => {
+                    this.updateStats();
+                }, 3000);
+                
+                // WebSocket连接
+                this.connectWebSocket();
+            },
+            methods: {
+                initChart() {
+                    const ctx = document.getElementById('fileTypeChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['视频', '音频', '图片', '文档', '其他'],
+                            datasets: [{
+                                data: [45, 25, 15, 10, 5],
+                                backgroundColor: ['#F44336', '#2196F3', '#4CAF50', '#FF9800', '#9C27B0']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+                },
+                connectWebSocket() {
+                    // WebSocket连接逻辑
+                    const ws = new WebSocket(`ws://${window.location.host}/ws`);
+                    
+                    ws.onopen = () => {
+                        console.log('WebSocket连接已建立');
+                    };
+                    
+                    ws.onmessage = (event) => {
+                        const data = JSON.parse(event.data);
+                        if (data.type === 'stats_update') {
+                            // 更新实时数据
+                            this.systemStats = { ...this.systemStats, ...data.data };
+                        }
+                    };
+                    
+                    ws.onclose = () => {
+                        console.log('WebSocket连接已关闭');
+                        // 5秒后重连
+                        setTimeout(() => this.connectWebSocket(), 5000);
+                    };
+                }
+            }
+        });
+
+        app.use(vuetify);
+        app.mount('#app');
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+# Example Plugin Configuration
+
+name: example_plugin
+version: 1.0.0
+description: 示例插件配置
+
+dependencies:
+  - requests>=2.25.0
+
+settings:
+  api_key:
+    type: string
+    required: false
+    description: API密钥（可选）
+    default: ""
+  
+  timeout:
+    type: integer
+    required: false
+    description: 请求超时时间（秒）
+    default: 30
+    min: 1
+    max: 300
+  
+  enabled_features:
+    type: list
+    required: false
+    description: 启用的功能列表
+    default:
+      - "message_processing"
+      - "background_tasks"
+  
+  log_level:
+    type: string
+    required: false
+    description: 日志级别
+    default: "INFO"
+    options:
+      - "DEBUG"
+      - "INFO"
+      - "WARNING"
+      - "ERROR"

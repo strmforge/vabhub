@@ -1,0 +1,59 @@
+name: Release VabHub-Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+# 设置权限
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Create release package
+      run: |
+        mkdir -p dist
+        cp -r docker-compose.* dist/
+        cp -r scripts dist/
+        cp -r docker dist/
+        cp README.md dist/
+        cp CHANGELOG.md dist/
+        cp RELEASE_v1.4.0.md dist/
+        
+        # 创建压缩包
+        cd dist
+        zip -r "../vabhub-deploy-${GITHUB_REF_NAME}.zip" .
+        cd ..
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: vabhub-deploy-*.zip
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        # 构建Docker镜像
+        docker build -t ghcr.io/strmforge/vabhub-deploy:${{ github.ref_name }} .
+        docker build -t ghcr.io/strmforge/vabhub-deploy:latest .
+        
+        # 登录GitHub Packages
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        
+        # 推送镜像到GitHub Packages
+        docker push ghcr.io/strmforge/vabhub-deploy:${{ github.ref_name }}
+        docker push ghcr.io/strmforge/vabhub-deploy:latest

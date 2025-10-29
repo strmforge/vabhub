@@ -1,0 +1,76 @@
+# VabHub排行榜服务环境变量配置示例
+# 复制此文件为 charts_env.env 并填入实际的API密钥
+
+# ========================
+# 音乐类数据源API密钥
+# ========================
+
+# Spotify开发者API密钥
+# 申请地址: https://developer.spotify.com/dashboard
+SPOTIFY_API_KEY=your_spotify_api_key_here
+
+# 网易云音乐Cookie
+# 登录网易云音乐网页版后获取Cookie
+NETEASE_COOKIE=your_netease_cookie_here
+
+# QQ音乐API密钥
+# 需要申请QQ音乐开放平台
+QQ_MUSIC_API_KEY=your_qq_music_api_key_here
+
+# Apple Music API密钥
+# 申请地址: https://developer.apple.com/musickit/
+APPLE_MUSIC_API_KEY=your_apple_music_api_key_here
+
+# ========================
+# 影视类数据源API密钥
+# ========================
+
+# TMDB API密钥
+# 申请地址: https://www.themoviedb.org/settings/api
+TMDB_API_KEY=your_tmdb_api_key_here
+
+# 豆瓣API密钥
+# 申请地址: https://developers.douban.com/
+DOUBAN_API_KEY=your_douban_api_key_here
+
+# IMDb API密钥
+# 申请地址: https://imdb-api.com/api
+IMDB_API_KEY=your_imdb_api_key_here
+
+# 猫眼API密钥
+# 需要申请猫眼开放平台
+MAOYAN_API_KEY=your_maoyan_api_key_here
+
+# ========================
+# 电视剧数据源API密钥
+# ========================
+
+# MyDramaList API密钥
+# 申请地址: https://www.mydramalist.com/api
+MYDRAMALIST_API_KEY=your_mydramalist_api_key_here
+
+# Viki API密钥
+# 申请地址: https://www.viki.com/developer
+VIKI_API_KEY=your_viki_api_key_here
+
+# TVmaze API密钥
+# 申请地址: https://www.tvmaze.com/api
+TVMAZE_API_KEY=your_tvmaze_api_key_here
+
+# Trakt API密钥
+# 申请地址: https://trakt.tv/oauth/applications
+TRAKT_API_KEY=your_trakt_api_key_here
+
+# ========================
+# 服务配置
+# ========================
+
+# Redis连接配置
+REDIS_HOST=localhost
+REDIS_PORT=6390
+REDIS_PASSWORD=
+REDIS_DB=0
+
+# 服务端口配置
+API_PORT=6280
+DEBUG=false

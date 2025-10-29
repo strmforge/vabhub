@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VabHub - 智能媒体管理平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2196F3;
+            --secondary: #607D8B;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --dark: #263238;
+            --light: #ECEFF1;
+            --sidebar-width: 280px;
+        }
+        
+        .vabhub-navbar {
+            background: linear-gradient(135deg, var(--primary) 0%, #1976D2 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: 60px;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark);
+            color: white;
+            height: calc(100vh - 60px);
+            position: fixed;
+            top: 60px;
+            left: 0;
+            overflow-y: auto;
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            background: #f8f9fa;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .nav-item {
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .nav-item.active {
+            border-left-color: var(--primary);
+            background: rgba(33, 150, 243, 0.1);
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #1976D2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .download-card {
+            background: white;
+            border-radius: 12px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .pt-card {
+            background: white;
+            border-radius: 12px;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .media-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .media-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .media-poster {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+        
+        .progress-thin {
+            height: 4px;
+        }
+        
+        .badge-quality {
+            background: var(--success);
+            color: white;
+        }
+        
+        .badge-movie {
+            background: #E91E63;
+            color: white;
+        }
+        
+        .badge-tv {
+            background: #9C27B0;
+            color: white;
+        }
+        
+        .badge-music {
+            background: #3F51B5;
+            color: white;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, var(--success) 0%, #45a049 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .search-box {
+            background: white;
+            border-radius: 25px;
+            border: 1px solid #e0e0e0;
+            padding: 8px 20px;
+        }
+        
+        .tab-content {
+            background: white;
+            border-radius: 0 0 12px 12px;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background: white;
+            border-color: #e0e0e0 #e0e0e0 white;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark vabhub-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-cube me-2"></i>
+                VabHub
+            </a>
+            
+            <!-- 搜索框 -->
+            <div class="d-flex align-items-center">
+                <div class="search-box me-3">
+                    <i class="fas fa-search text-muted me-2"></i>
+                    <input type="text" class="border-0 bg-transparent" placeholder="搜索电影、电视剧、音乐..." style="outline: none; width: 300px;">
+                </div>
+                
+                <!-- 通知 -->
+                <div class="dropdown me-3">
+                    <a href="#" class="text-white position-relative">
+                        <i class="fas fa-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+                    </a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="dropdown">
+                    <a href="#" class="text-white dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle me-1"></i>
+                        Admin
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>系统设置</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-plug me-2"></i>插件管理</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>退出</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="p-3">
+            <!-- 系统状态 -->
+            <div class="mb-4">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="bg-success rounded-circle me-2" style="width: 8px; height: 8px;"></div>
+                    <small class="text-success">系统运行正常</small>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">CPU: 24%</small>
+                    <small class="text-muted">内存: 68%</small>
+                </div>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <ul class="nav flex-column">
+                <li class="nav-item active">
+                    <a class="nav-link text-white" href="#">
+                        <i class="fas fa-home me-3"></i>仪表盘
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/download">
+                        <i class="fas fa-download me-3"></i>下载管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/media">
+                        <i class="fas fa-film me-3"></i>媒体库
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/pt">
+                        <i class="fas fa-torrent me-3"></i>PT站点
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/tasks">
+                        <i class="fas fa-tasks me-3"></i>任务中心
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/plugins">
+                        <i class="fas fa-puzzle-piece me-3"></i>插件市场
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/settings">
+                        <i class="fas fa-cog me-3"></i>系统设置
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- 下载器状态 -->
+            <div class="mt-4">
+                <h6 class="text-muted mb-3">下载器状态</h6>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small>qBittorrent</small>
+                        <span class="badge bg-success">在线</span>
+                    </div>
+                    <div class="progress progress-thin mt-1">
+                        <div class="progress-bar" style="width: 65%"></div>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small>Transmission</small>
+                        <span class="badge bg-secondary">离线</span>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small>Aria2</small>
+                        <span class="badge bg-success">在线</span>
+                    </div>
+                    <div class="progress progress-thin mt-1">
+                        <div class="progress-bar bg-warning" style="width: 30%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PT站点状态 -->
+            <div class="mt-4">
+                <h6 class="text-muted mb-3">PT站点</h6>
+                <div class="d-flex flex-wrap gap-1">
+                    <span class="badge bg-primary">M-Team</span>
+                    <span class="badge bg-success">HDChina</span>
+                    <span class="badge bg-warning">PTHome</span>
+                    <span class="badge bg-info">TTG</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 统计卡片 -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">1,284</h4>
+                            <small>媒体文件</small>
+                        </div>
+                        <i class="fas fa-film fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card" style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">86</h4>
+                            <small>正在下载</small>
+                        </div>
+                        <i class="fas fa-download fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card" style="background: linear-gradient(135deg, #FF9800 0%, #f57c00 100%);">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">24.7TB</h4>
+                            <small>存储空间</small>
+                        </div>
+                        <i class="fas fa-hdd fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card" style="background: linear-gradient(135deg, #9C27B0 0%, #7b1fa2 100%);">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">12</h4>
+                            <small>活跃插件</small>
+                        </div>
+                        <i class="fas fa-plug fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 热门推荐和下载管理 -->
+        <div class="row">
+            <!-- 热门推荐 -->
+            <div class="col-lg-8">
+                <div class="dashboard-card p-3 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">
+                            <i class="fas fa-fire me-2 text-danger"></i>
+                            热门推荐
+                        </h5>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-primary active">电影</button>
+                            <button class="btn btn-sm btn-outline-primary">电视剧</button>
+                            <button class="btn btn-sm btn-outline-primary">音乐</button>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- 电影推荐 -->
+                        <div class="col-md-4 mb-3">
+                            <div class="media-card">
+                                <div class="media-poster">
+                                    <i class="fas fa-film"></i>
+                                </div>
+                                <div class="p-3">
+                                    <h6 class="mb-1">奥本海默</h6>
+                                    <small class="text-muted">2023 · 剧情/历史</small>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <span class="badge badge-quality">4K REMUX</span>
+                                        <span class="badge badge-movie">电影</span>
+                                    </div>
+                                    <button class="download-btn w-100 mt-2">
+                                        <i class="fas fa-download me-1"></i>下载
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="media-card">
+                                <div class="media-poster" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);">
+                                    <i class="fas fa-tv"></i>
+                                </div>
+                                <div class="p-3">
+                                    <h6 class="mb-1">最后生还者 S01</h6>
+                                    <small class="text-muted">2023 · 剧情/科幻</small>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <span class="badge badge-quality">1080p</span>
+                                        <span class="badge badge-tv">电视剧</span>
+                                    </div>
+                                    <button class="download-btn w-100 mt-2">
+                                        <i class="fas fa-download me-1"></i>下载
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="media-card">
+                                <div class="media-poster" style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);">
+                                    <i class="fas fa-music"></i>
+                                </div>
+                                <div class="p-3">
+                                    <h6 class="mb-1">Taylor Swift - 1989</h6>
+                                    <small class="text-muted">2014 · 流行音乐</small>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <span class="badge badge-quality">FLAC</span>
+                                        <span class="badge badge-music">音乐</span>
+                                    </div>
+                                    <button class="download-btn w-100 mt-2">
+                                        <i class="fas fa-download me-1"></i>下载
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 智能处理工作流 -->
+                <div class="dashboard-card p-3">
+                    <h5 class="mb-3">
+                        <i class="fas fa-robot me-2 text-primary"></i>
+                        智能媒体处理
+                    </h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">选择目录</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="f:\\media" placeholder="选择媒体目录">
+                                    <button class="btn btn-outline-secondary">
+                                        <i class="fas fa-folder-open"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">处理选项</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" checked>
+                                    <label class="form-check-label">智能识别</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" checked>
+                                    <label class="form-check-label">自动重命名</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" checked>
+                                    <label class="form-check-label">元数据刮削</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">移动到媒体库</label>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100">
+                                <i class="fas fa-play me-2"></i>开始处理
+                            </button>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <h6>处理进度</h6>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" style="width: 65%"></div>
+                                </div>
+                                <small class="text-muted">正在处理: 奥本海默.2023.2160p.BluRay.REMUX.mkv</small>
+                                
+                                <div class="mt-3">
+                                    <small>识别结果:</small>
+                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                        <span class="badge bg-primary">电影</span>
+                                        <span class="badge bg-success">4K</span>
+                                        <span class="badge bg-info">REMUX</span>
+                                        <span class="badge bg-warning">HDR</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧边栏 -->
+            <div class="col-lg-4">
+                <!-- 下载队列 -->
+                <div class="dashboard-card p-3 mb-4">
+                    <h6 class="mb-3">
+                        <i class="fas fa-list-ol me-2 text-success"></i>
+                        下载队列
+                    </h6>
+                    
+                    <div class="download-card p-2 mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="fw-bold">奥本海默.2023.2160p</small>
+                                <div class="progress progress-thin mt-1">
+                                    <div class="progress-bar bg-success" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <small class="text-muted">85%</small>
+                        </div>
+                    </div>
+                    
+                    <div class="download-card p-2 mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="fw-bold">最后生还者.S01E01</small>
+                                <div class="progress progress-thin mt-1">
+                                    <div class="progress-bar bg-primary" style="width: 45%"></div>
+                                </div>
+                            </div>
+                            <small class="text-muted">45%</small>
+                        </div>
+                    </div>
+                    
+                    <div class="download-card p-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="fw-bold">Taylor Swift - 1989</small>
+                                <div class="progress progress-thin mt-1">
+                                    <div class="progress-bar bg-warning" style="width: 20%"></div>
+                                </div>
+                            </div>
+                            <small class="text-muted">20%</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PT站点动态 -->
+                <div class="dashboard-card p-3 mb-4">
+                    <h6 class="mb-3">
+                        <i class="fas fa-rss me-2 text-warning"></i>
+                        PT站点动态
+                    </h6>
+                    
+                    <div class="pt-card p-2 mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="fw-bold">M-Team</small>
+                            <span class="badge bg-success">Free</span>
+                        </div>
+                        <small class="text-muted">新种: 奥本海默 4K REMUX</small>
+                    </div>
+                    
+                    <div class="pt-card p-2 mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="fw-bold">HDChina</small>
+                            <span class="badge bg-danger">2x Upload</span>
+                        </div>
+                        <small class="text-muted">热门: 最后生还者 全季</small>
+                    </div>
+                    
+                    <div class="pt-card p-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="fw-bold">PTHome</small>
+                            <span class="badge bg-info">50% Off</span>
+                        </div>
+                        <small class="text-muted">音乐: Taylor Swift 全集</small>
+                    </div>
+                </div>
+                
+                <!-- 系统信息 -->
+                <div class="dashboard-card p-3">
+                    <h6 class="mb-3">
+                        <i class="fas fa-info-circle me-2 text-info"></i>
+                        系统信息
+                    </h6>
+                    
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="bg-primary text-white rounded p-2">
+                                <small>CPU使用率</small>
+                                <div class="h5 mb-0">24%</div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="bg-success text-white rounded p-2">
+                                <small>内存使用</small>
+                                <div class="h5 mb-0">68%</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-warning text-white rounded p-2">
+                                <small>磁盘空间</small>
+                                <div class="h5 mb-0">82%</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-info text-white rounded p-2">
+                                <small>网络速度</small>
+                                <div class="h5 mb-0">156M/s</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+    <script>
+        // 导航菜单激活
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 模拟数据更新
+        setInterval(() => {
+            // 更新下载进度
+            const progresses = document.querySelectorAll('.progress-bar');
+            progresses.forEach(bar => {
+                const currentWidth = parseInt(bar.style.width);
+                if (currentWidth < 100) {
+                    const newWidth = Math.min(currentWidth + Math.random() * 5, 100);
+                    bar.style.width = newWidth + '%';
+                    bar.parentElement.nextElementSibling.textContent = Math.round(newWidth) + '%';
+                }
+            });
+            
+            // 更新系统状态
+            document.querySelectorAll('.stat-card h4').forEach(stat => {
+                const current = parseInt(stat.textContent.replace(/[^0-9]/g, ''));
+                const change = Math.floor(Math.random() * 3) - 1;
+                stat.textContent = Math.max(1, current + change).toLocaleString();
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

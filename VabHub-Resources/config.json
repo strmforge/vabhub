@@ -1,0 +1,18 @@
+{
+  "app_name": "SmartMedia Hub",
+  "version": "1.1.0",
+  "port": 8090,
+  "host": "0.0.0.0",
+  "debug": false,
+  "network_retry_count": 3,
+  "network_retry_delay": 2,
+  "network_op_delay": 1.0,
+  "batch_size": 10,
+  "tmdb_api_key": "your-tmdb-api-key-here",
+  "tmdb_proxy": "http://proxy:port",
+  "douban_cookie": "your-douban-cookie-here",
+  "scan_path": "f:/media-renamer/test_files",
+  "movie_output_path": "f:/media-renamer/output/movies",
+  "tv_output_path": "f:/media-renamer/output/tv_shows",
+  "conflict_strategy": "auto"
+}

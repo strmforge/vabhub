@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartMedia Hub - 品牌标识系统</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0; 
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 3rem; }
+        .header h1 { 
+            font-size: 3rem; 
+            font-weight: 700; 
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header p { font-size: 1.2rem; color: #94a3b8; }
+        
+        .brand-section { 
+            background: rgba(30, 41, 59, 0.6); 
+            border-radius: 16px; 
+            padding: 2rem; 
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 2rem; 
+            margin-top: 2rem;
+        }
+        
+        .logo-item { 
+            background: rgba(15, 23, 42, 0.8); 
+            border-radius: 16px; 
+            padding: 2rem; 
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .logo-item:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .logo-item.selected { 
+            border-color: #0ea5e9;
+            background: rgba(14, 165, 233, 0.1);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.2);
+        }
+        
+        .logo-preview { 
+            width: 160px; 
+            height: 160px; 
+            margin: 0 auto 1.5rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            border-radius: 24px;
+            transition: transform 0.3s ease;
+        }
+        .logo-item:hover .logo-preview { transform: scale(1.05); }
+        
+        .color-blue { background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%); }
+        .color-purple { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+        .color-teal { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); }
+        
+        .logo-title { 
+            font-size: 1.3rem; 
+            font-weight: 600; 
+            margin-bottom: 0.5rem;
+            color: #e2e8f0;
+        }
+        .logo-desc { font-size: 0.9rem; color: #94a3b8; }
+        
+        .color-palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 1.5rem; }
+        .color-item { 
+            height: 60px; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .typography-demo { margin-top: 1.5rem; }
+        .font-sample { margin: 1rem 0; }
+        .font-large { font-size: 2.5rem; font-weight: 700; }
+        .font-medium { font-size: 1.8rem; font-weight: 600; }
+        .font-small { font-size: 1.2rem; font-weight: 400; }
+        
+        .btn { 
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SmartMedia Hub</h1>
+            <p>智能媒体中心 - 品牌标识系统</p>
+        </div>
+        
+        <!-- Logo设计方案 -->
+        <div class="brand-section">
+            <h2>Logo设计方案</h2>
+            <p>选择您喜欢的Logo设计，点击即可预览效果</p>
+            <div class="logo-grid">
+                <div class="logo-item selected" onclick="selectLogo('hub-center')">
+                    <div class="logo-preview color-blue">
+                        <img src="../logo.png" alt="SmartMedia Hub Logo" width="100" height="100" style="border-radius: 20px;">
+                    </div>
+                    <div class="logo-title">中心枢纽版</div>
+                    <div class="logo-desc">播放器与数据节点的结合，体现智能中心概念</div>
+                </div>
+                
+                <div class="logo-item" onclick="selectLogo('media-flow')">
+                    <div class="logo-preview color-purple">
+                        <img src="../logo.png" alt="SmartMedia Hub Logo" width="100" height="100" style="border-radius: 20px;">
+                    </div>
+                    <div class="logo-title">媒体流版</div>
+                    <div class="logo-desc">数据流与播放器的结合，突出媒体处理能力</div>
+                </div>
+                
+                <div class="logo-item" onclick="selectLogo('smart-ai')">
+                    <div class="logo-preview color-teal">
+                        <img src="../logo.png" alt="SmartMedia Hub Logo" width="100" height="100" style="border-radius: 20px;">
+                    </div>
+                    <div class="logo-title">智能AI版</div>
+                    <div class="logo-desc">AI大脑与媒体播放的结合，突出智能分析</div>
+                </div>
+            </div>
+            <button class="btn" onclick="applySelectedLogo()">应用选中的Logo</button>
+        </div>
+        
+        <!-- 色彩系统 -->
+        <div class="brand-section">
+            <h2>品牌色彩系统</h2>
+            <div class="color-palette">
+                <div class="color-item" style="background: #0ea5e9;">主色<br>#0ea5e9</div>
+                <div class="color-item" style="background: #06b6d4;">辅助色<br>#06b6d4</div>
+                <div class="color-item" style="background: #0f172a;">深色背景<br>#0f172a</div>
+                <div class="color-item" style="background: #1e293b;">次级背景<br>#1e293b</div>
+                <div class="color-item" style="background: #e2e8f0; color: #1e293b;">文字色<br>#e2e8f0</div>
+            </div>
+        </div>
+        
+        <!-- 字体系统 -->
+        <div class="brand-section">
+            <h2>字体系统</h2>
+            <div class="typography-demo">
+                <div class="font-sample">
+                    <div class="font-large">SmartMedia Hub - 标题字体</div>
+                    <div>Inter Bold 700 - 用于品牌标题和重要信息</div>
+                </div>
+                <div class="font-sample">
+                    <div class="font-medium">智能媒体中心 - 正文字体</div>
+                    <div>Inter SemiBold 600 - 用于正文和导航</div>
+                </div>
+                <div class="font-sample">
+                    <div class="font-small">专业的全球智能媒体管理解决方案</div>
+                    <div>Inter Regular 400 - 用于描述和辅助信息</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let selectedLogo = 'hub-center';
+        
+        function selectLogo(logoType) {
+            document.querySelectorAll('.logo-item').forEach(item => item.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            selectedLogo = logoType;
+        }
+        
+        function applySelectedLogo() {
+            alert(`已选择 ${selectedLogo} Logo，将在主界面应用`);
+            // 这里可以添加实际应用Logo的逻辑
+        }
+    </script>
+</body>
+</html>
