@@ -36,6 +36,8 @@ jobs:
           ghcr.io/strmforge/vabhub-core:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        build-args: |
+          BUILDKIT_CONTEXT_KEEP_GIT_DIR=1
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
