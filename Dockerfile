@@ -76,7 +76,7 @@ ENV PYTHONPATH=/app/core
 ENV PYTHONUNBUFFERED=1
 
 # 启动脚本权限设置
-RUN chmod +x /app/start.sh
+RUN chmod +x /app/deploy/start.sh
 
 # 启动命令
-CMD ["/app/start.sh"]
+CMD ["/app/deploy/start.sh"]
