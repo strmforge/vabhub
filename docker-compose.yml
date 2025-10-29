@@ -1,11 +1,11 @@
-# VabHub 统一部署配置
+# VabHub v1.5.0 统一部署配置
 # 用户只需运行: docker-compose up -d
 
 version: '3.8'
 
 services:
   vabhub:
-    image: ghcr.io/strmforge/vabhub:latest
+    image: ghcr.io/strmforge/vabhub:v1.5.0
     container_name: vabhub
     hostname: vabhub
     ports:

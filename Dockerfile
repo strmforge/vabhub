@@ -1,4 +1,4 @@
-# VabHub 统一Docker镜像
+# VabHub v1.5.0 统一Docker镜像
 # 将所有组件整合到一个镜像中，用户只需拉取这一个镜像
 
 FROM python:3.11-slim as builder
