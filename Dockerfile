@@ -1,7 +1,7 @@
 # VabHub v1.5.0 统一Docker镜像
 # 将所有组件整合到一个镜像中，用户只需拉取这一个镜像
 
-FROM python:3.11-slim as builder
+FROM python:3.11-slim AS builder
 
 # 设置工作目录
 WORKDIR /app
@@ -68,8 +68,8 @@ RUN useradd -m -u 1000 vabhub && \
 USER vabhub
 
 # 暴露端口
-EXPOSE 4000  # 前端端口 (默认)
-EXPOSE 4001  # 后端API端口 (默认)
+EXPOSE 4000
+EXPOSE 4001
 
 # 设置环境变量
 ENV PYTHONPATH=/app/core

@@ -2,7 +2,7 @@
 
 ## 概述
 
-基于MoviePilot发现推荐架构优化的VabHub发现推荐系统已经成功实现。该系统提供了全面的媒体内容发现和推荐功能，支持影视榜单、音乐榜单、个性化推荐等多种发现方式。
+VabHub发现推荐系统已经成功实现。该系统提供了全面的媒体内容发现和推荐功能，支持影视榜单、音乐榜单、个性化推荐等多种发现方式。
 
 ## 功能特性
 
@@ -230,13 +230,14 @@ def collaborative_filtering(self, user_id, similar_users_count=10):
     pass
 ```
 
-## 与MoviePilot的对比优势
+## VabHub发现推荐系统的特色
 
 ### ✅ VabHub发现推荐系统的特色
 
-**1. 更全面的数据源**
-- MoviePilot：主要聚焦影视内容
-- VabHub：影视 + 音乐双轨推荐
+**1. 全面的数据源**
+- 影视内容：电影、电视剧、动漫
+- 音乐内容：热门歌曲、最新专辑
+- 多平台数据聚合
 
 **2. 更智能的推荐算法**
 - 个性化推荐引擎
@@ -316,7 +317,7 @@ def collaborative_filtering(self, user_id, similar_users_count=10):
 
 ---
 
-**VabHub发现推荐系统** - 基于MoviePilot架构优化的智能媒体发现解决方案
+**VabHub发现推荐系统** - 智能媒体发现解决方案
 
 ## 技术亮点总结
 
@@ -335,4 +336,4 @@ def collaborative_filtering(self, user_id, similar_users_count=10):
 - **流畅交互**：优化的页面加载和响应
 - **直观界面**：清晰的信息展示和操作
 
-现在VabHub已经具备了与MoviePilot相媲美甚至更优秀的发现推荐功能，可以立即开始使用和测试！
+现在VabHub已经具备了优秀的发现推荐功能，可以立即开始使用和测试！

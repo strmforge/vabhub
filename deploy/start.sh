@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # VabHub 统一启动脚本
-# 支持环境变量和可选功能，参考MoviePilot模式
+# 支持环境变量和可选功能
 
 echo "🚀 启动 VabHub 统一系统..."
 
