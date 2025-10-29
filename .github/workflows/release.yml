@@ -1,0 +1,50 @@
+name: Release VabHub
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+# 设置权限
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: |
+          ghcr.io/strmforge/vabhub-core:${{ github.ref_name }}
+          ghcr.io/strmforge/vabhub-core:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          docker-compose.yml
+          README.md
+          CHANGELOG.md
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
