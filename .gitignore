@@ -56,9 +56,9 @@ config_backups/
 !.gitkeep
 
 # Sub-repositories (these should be managed as separate Git repositories)
-VabHub-Core/
-VabHub-Frontend/
-VabHub-Plugins/
-VabHub-Resources/
-VabHub-Deploy/
+# VabHub-Core/
+# VabHub-Frontend/
+# VabHub-Plugins/
+# VabHub-Resources/
+# VabHub-Deploy/
 vabhub/
