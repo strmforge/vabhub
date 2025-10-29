@@ -19,11 +19,11 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
 # 复制所有组件到镜像中
-COPY VabHub-Core/ ./core/
-COPY VabHub-Frontend/ ./frontend/
-COPY VabHub-Plugins/ ./plugins/
-COPY VabHub-Resources/ ./resources/
-COPY VabHub-Deploy/ ./deploy/
+COPY ./core/ ./core/
+COPY ./frontend/ ./frontend/
+COPY ./plugins/ ./plugins/
+COPY ./resources/ ./resources/
+COPY ./deploy/ ./deploy/
 
 # 构建前端
 WORKDIR /app/frontend
