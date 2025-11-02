@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.3](https://github.com/strmforge/vabhub/compare/v1.6.2...v1.6.3) (2025-11-02)
+
+
+### Bug Fixes
+
+* update GitHub Actions Docker build configurations ([c8e097b](https://github.com/strmforge/vabhub/commit/c8e097b53ee0ade950bd0bae1ddc1be924f330b6))
+
 ## [1.6.2](https://github.com/strmforge/vabhub/compare/v1.6.1...v1.6.2) (2025-11-02)
 
 
