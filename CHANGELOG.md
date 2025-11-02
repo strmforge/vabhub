@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.2](https://github.com/strmforge/vabhub/compare/v1.6.1...v1.6.2) (2025-11-02)
+
+
+### Bug Fixes
+
+* update GitHub Actions Node.js cache configuration ([ce0c442](https://github.com/strmforge/vabhub/commit/ce0c4429fdc134c94b15764d3468445191d40683))
+
 ## [1.6.1](https://github.com/strmforge/vabhub/compare/v1.6.0...v1.6.1) (2025-11-02)
 
 
