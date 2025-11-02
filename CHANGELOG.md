@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.11](https://github.com/strmforge/vabhub/compare/v1.6.10...v1.6.11) (2025-11-02)
+
+
+### Bug Fixes
+
+* remove non-existent user store import from stores/index.ts ([c0ebccc](https://github.com/strmforge/vabhub/commit/c0ebccc835acac1723cd7cc2f44158d9aa76a7e8))
+
 ## [1.6.10](https://github.com/strmforge/vabhub/compare/v1.6.9...v1.6.10) (2025-11-02)
 
 
