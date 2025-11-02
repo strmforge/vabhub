@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.6](https://github.com/strmforge/vabhub/compare/v1.6.5...v1.6.6) (2025-11-02)
+
+
+### Bug Fixes
+
+* 修复 Dependabot 配置路径错误，添加插件依赖更新配置 ([280e8dc](https://github.com/strmforge/vabhub/commit/280e8dc7ab0e58d6125c02f04b3719f59a989859))
+
 ## [1.6.5](https://github.com/strmforge/vabhub/compare/v1.6.4...v1.6.5) (2025-11-02)
 
 
