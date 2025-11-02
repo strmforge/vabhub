@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.9](https://github.com/strmforge/vabhub/compare/v1.6.8...v1.6.9) (2025-11-02)
+
+
+### Bug Fixes
+
+* 删除 vite.config.js 中重复的 autoprefixer 导入语句 ([c68b6bc](https://github.com/strmforge/vabhub/commit/c68b6bc89cc49792dc4413bcdba21219a03d5891))
+
 ## [1.6.8](https://github.com/strmforge/vabhub/compare/v1.6.7...v1.6.8) (2025-11-02)
 
 
