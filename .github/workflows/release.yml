@@ -39,15 +39,15 @@ jobs:
         echo "Checking required directories..."
         ls -la
         echo "Core content:"
-        ls -la core/ || echo "Core directory not found"
+        ls -la vabhub-Core/ || echo "Core directory not found"
         echo "Frontend content:"
-        ls -la frontend/ || echo "Frontend directory not found"
+        ls -la vabhub-frontend/ || echo "Frontend directory not found"
         echo "Plugins content:"
-        ls -la plugins/ || echo "Plugins directory not found"
+        ls -la vabhub-plugins/ || echo "Plugins directory not found"
         echo "Resources content:"
-        ls -la resources/ || echo "Resources directory not found"
+        ls -la vabhub-resources/ || echo "Resources directory not found"
         echo "Deploy content:"
-        ls -la deploy/ || echo "Deploy directory not found"
+        ls -la vabhub-deploy/ || echo "Deploy directory not found"
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
