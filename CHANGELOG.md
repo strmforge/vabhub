@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.9](https://github.com/strmforge/vabhub/compare/v1.7.8...v1.7.9) (2025-11-02)
+
+
+### Bug Fixes
+
+* add missing useGlobalSettingsStore export to resolve build error ([f415c0d](https://github.com/strmforge/vabhub/commit/f415c0dbe7ef924fe7f36bf88ed505468d9bd5aa))
+
 ## [1.7.8](https://github.com/strmforge/vabhub/compare/v1.7.7...v1.7.8) (2025-11-02)
 
 
