@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.2](https://github.com/strmforge/vabhub/compare/v1.7.1...v1.7.2) (2025-11-02)
+
+
+### Bug Fixes
+
+* replace non-existent el-loading-text with standard loading component ([c8226b8](https://github.com/strmforge/vabhub/commit/c8226b8840bed9a33770b4c222c404a220afa286))
+
 ## [1.7.1](https://github.com/strmforge/vabhub/compare/v1.7.0...v1.7.1) (2025-11-02)
 
 
