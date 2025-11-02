@@ -1,4 +1,4 @@
-# VabHub Core v1.5.0
+# VabHub Core v1.6.0
 
 VabHub 核心后端服务，提供媒体管理、推荐算法、API接口等核心功能。
 

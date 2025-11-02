@@ -16,10 +16,45 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - name: Checkout code
+        uses: actions/checkout@v5
         with:
-          release-type: node
+          fetch-depth: 0
+          
+      - name: Create temporary package.json for release-please
+        run: |
+          cat > package.json << EOF
+          {
+            "name": "vabhub",
+            "version": "$(cat VERSION)",
+            "description": "VabHub - Decentralized Media Sharing Network",
+            "repository": {
+              "type": "git",
+              "url": "https://github.com/strmforge/vabhub.git"
+            },
+            "author": "VabHub Team",
+            "license": "MIT"
+          }
+          EOF
+          
+      - uses: googleapis/release-please-action@v4
+        with:
+          release-type: simple
           package-name: vabhub
+          manifest-file: VERSION
+          changelog-types: |
+            [
+              {"type": "feat", "section": "Features"},
+              {"type": "fix", "section": "Bug Fixes"},
+              {"type": "docs", "section": "Documentation"},
+              {"type": "style", "section": "Styles"},
+              {"type": "refactor", "section": "Code Refactoring"},
+              {"type": "perf", "section": "Performance Improvements"},
+              {"type": "test", "section": "Tests"},
+              {"type": "build", "section": "Build System"},
+              {"type": "ci", "section": "Continuous Integration"},
+              {"type": "chore", "section": "Miscellaneous Chores"}
+            ]
 
   build-and-push:
     runs-on: ubuntu-latest
