@@ -116,13 +116,52 @@
       <h3 class="section-title">音乐排行榜</h3>
       <el-tabs v-model="activeChart" @tab-click="handleChartChange">
         <el-tab-pane label="热歌榜" name="hot">
-          <ChartList :songs="hotSongs" />
+          <div class="chart-list">
+            <div v-for="(song, index) in hotSongs" :key="song.id" class="chart-item">
+              <div class="chart-rank">{{ index + 1 }}</div>
+              <div class="chart-info">
+                <div class="song-title">{{ song.title }}</div>
+                <div class="song-artist">{{ song.artist }}</div>
+              </div>
+              <div class="chart-actions">
+                <el-button link @click="playMusic(song)">
+                  <el-icon><VideoPlay /></el-icon>
+                </el-button>
+              </div>
+            </div>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="新歌榜" name="new">
-          <ChartList :songs="newSongs" />
+          <div class="chart-list">
+            <div v-for="(song, index) in newSongs" :key="song.id" class="chart-item">
+              <div class="chart-rank">{{ index + 1 }}</div>
+              <div class="chart-info">
+                <div class="song-title">{{ song.title }}</div>
+                <div class="song-artist">{{ song.artist }}</div>
+              </div>
+              <div class="chart-actions">
+                <el-button link @click="playMusic(song)">
+                  <el-icon><VideoPlay /></el-icon>
+                </el-button>
+              </div>
+            </div>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="原创榜" name="original">
-          <ChartList :songs="originalSongs" />
+          <div class="chart-list">
+            <div v-for="(song, index) in originalSongs" :key="song.id" class="chart-item">
+              <div class="chart-rank">{{ index + 1 }}</div>
+              <div class="chart-info">
+                <div class="song-title">{{ song.title }}</div>
+                <div class="song-artist">{{ song.artist }}</div>
+              </div>
+              <div class="chart-actions">
+                <el-button link @click="playMusic(song)">
+                  <el-icon><VideoPlay /></el-icon>
+                </el-button>
+              </div>
+            </div>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -151,8 +190,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref, reactive, computed, h, defineComponent } from 'vue'
+import { ElMessage, ElButton, ElIcon } from 'element-plus'
 import { Search, VideoPlay } from '@element-plus/icons-vue'
 
 interface OnlineMusic {
@@ -400,27 +439,7 @@ const getPlatformName = (platform: string) => {
   return names[platform] || platform
 }
 
-// 排行榜列表组件
-const ChartList = ({ songs }: { songs: OnlineMusic[] }) => {
-  return (
-    <div class="chart-list">
-      {songs.map((song, index) => (
-        <div class="chart-item" key={song.id}>
-          <div class="chart-rank">{index + 1}</div>
-          <div class="chart-info">
-            <div class="song-title">{song.title}</div>
-            <div class="song-artist">{song.artist}</div>
-          </div>
-          <div class="chart-actions">
-            <el-button link onClick={() => playMusic(song)}>
-              <el-icon><VideoPlay /></el-icon>
-            </el-button>
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
+
 </script>
 
 <style scoped>
