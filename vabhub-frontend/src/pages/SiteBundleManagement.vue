@@ -197,7 +197,7 @@ import {
   Delete,
 } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { siteBundleApi } from '@/services/api'
+import ApiService from '@/services/api'
 
 interface SiteBundle {
   id: string
@@ -256,7 +256,7 @@ const filteredBundles = computed(() => {
 const loadBundles = async () => {
   try {
     loading.value = true
-    const response = await siteBundleApi.listBundles()
+    const response = await ApiService.siteBundle.listBundles()
     bundles.value = response.bundles
   } catch (error) {
     ElMessage.error('加载站点包失败')
@@ -294,10 +294,10 @@ const saveBundle = async () => {
     }
     
     if (editingBundle.value) {
-      await siteBundleApi.updateBundle(editingBundle.value.id, cleanForm)
+      await ApiService.siteBundle.updateBundle(editingBundle.value.id, cleanForm)
       ElMessage.success('站点包更新成功')
     } else {
-      await siteBundleApi.createBundle(cleanForm)
+      await ApiService.siteBundle.createBundle(cleanForm)
       ElMessage.success('站点包创建成功')
     }
     
@@ -319,7 +319,7 @@ const deleteBundle = async (bundle: SiteBundle) => {
       { type: 'warning' }
     )
     
-    await siteBundleApi.deleteBundle(bundle.id)
+    await ApiService.siteBundle.deleteBundle(bundle.id)
     ElMessage.success('站点包删除成功')
     await loadBundles()
   } catch (error) {
@@ -329,7 +329,7 @@ const deleteBundle = async (bundle: SiteBundle) => {
 
 const exportBundle = async (bundle: SiteBundle) => {
   try {
-    const response = await siteBundleApi.exportBundle(bundle.id)
+    const response = await ApiService.siteBundle.exportBundle(bundle.id)
     const blob = new Blob([response.content], { type: 'text/yaml' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -356,7 +356,7 @@ const handleImportConfirm = async () => {
   
   try {
     importing.value = true
-    await siteBundleApi.importBundle(importContent.value)
+    await ApiService.siteBundle.importBundle(importContent.value)
     ElMessage.success('导入成功')
     showImportDialog.value = false
     await loadBundles()
