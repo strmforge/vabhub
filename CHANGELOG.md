@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.4](https://github.com/strmforge/vabhub/compare/v1.6.3...v1.6.4) (2025-11-02)
+
+
+### Bug Fixes
+
+* 修复 GitHub Actions 中 npm ci 命令错误，添加 package-lock.json 检查逻辑 ([5219834](https://github.com/strmforge/vabhub/commit/52198341c46c97c774ff84febf36164169cfff4e))
+
 ## [1.6.3](https://github.com/strmforge/vabhub/compare/v1.6.2...v1.6.3) (2025-11-02)
 
 
