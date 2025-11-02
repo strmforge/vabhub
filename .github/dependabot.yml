@@ -2,7 +2,7 @@ version: 2
 updates:
   # 前端依赖更新
   - package-ecosystem: "npm"
-    directory: "/frontend"
+    directory: "/vabhub-frontend"
     schedule:
       interval: "weekly"
     labels:
@@ -13,7 +13,7 @@ updates:
 
   # Python后端依赖更新
   - package-ecosystem: "pip"
-    directory: "/core"
+    directory: "/vabhub-Core"
     schedule:
       interval: "weekly"
     labels:
@@ -21,6 +21,83 @@ updates:
       - "backend"
     commit-message:
       prefix: "chore(deps-backend)"
+
+  # 插件依赖更新
+  - package-ecosystem: "pip"
+    directory: "/vabhub-plugins"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "plugins"
+    commit-message:
+      prefix: "chore(deps-plugins)"
+
+  # 插件依赖更新
+  - package-ecosystem: "pip"
+    directory: "/vabhub-plugins"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "plugins"
+    commit-message:
+      prefix: "chore(deps-plugins)"
+
+  # 插件依赖更新
+  - package-ecosystem: "pip"
+    directory: "/vabhub-plugins"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "plugins"
+    commit-message:
+      prefix: "chore(deps-plugins)"
+
+  # 插件依赖更新
+  - package-ecosystem: "pip"
+    directory: "/vabhub-plugins"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "plugins"
+    commit-message:
+      prefix: "chore(deps-plugins)"
+
+  # 插件依赖更新
+  - package-ecosystem: "pip"
+    directory: "/vabhub-plugins"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "plugins"
+    commit-message:
+      prefix: "chore(deps-plugins)"
+
+  # 插件依赖更新
+  - package-ecosystem: "pip"
+    directory: "/vabhub-plugins"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "plugins"
+    commit-message:
+      prefix: "chore(deps-plugins)"
+
+  # 插件依赖更新
+  - package-ecosystem: "pip"
+    directory: "/vabhub-plugins"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "plugins"
+    commit-message:
+      prefix: "chore(deps-plugins)"
 
   # GitHub Actions更新
   - package-ecosystem: "github-actions"
