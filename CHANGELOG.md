@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.5](https://github.com/strmforge/vabhub/compare/v1.6.4...v1.6.5) (2025-11-02)
+
+
+### Bug Fixes
+
+* 修复 GitHub Actions 中图标构建错误，创建缺失的 [@iconify](https://github.com/iconify) 目录和配置文件 ([39e9d5d](https://github.com/strmforge/vabhub/commit/39e9d5dfaae0c044805e1f8fb7803b194aa1ab1d))
+
 ## [1.6.4](https://github.com/strmforge/vabhub/compare/v1.6.3...v1.6.4) (2025-11-02)
 
 
