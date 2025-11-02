@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.7](https://github.com/strmforge/vabhub/compare/v1.7.6...v1.7.7) (2025-11-02)
+
+
+### Bug Fixes
+
+* create missing PWAInstallPrompt.vue component ([0517a23](https://github.com/strmforge/vabhub/commit/0517a23aadbbfb5973cc15d573aa7a0d10781e8e))
+
 ## [1.7.6](https://github.com/strmforge/vabhub/compare/v1.7.5...v1.7.6) (2025-11-02)
 
 
