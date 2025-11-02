@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.10](https://github.com/strmforge/vabhub/compare/v1.6.9...v1.6.10) (2025-11-02)
+
+
+### Bug Fixes
+
+* 修复 index.html 中的脚本路径引用 ([3b4f3c2](https://github.com/strmforge/vabhub/commit/3b4f3c201d21154d7848d533d800107ee25e7d71))
+
 ## [1.6.9](https://github.com/strmforge/vabhub/compare/v1.6.8...v1.6.9) (2025-11-02)
 
 
