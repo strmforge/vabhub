@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.1](https://github.com/strmforge/vabhub/compare/v1.7.0...v1.7.1) (2025-11-02)
+
+
+### Bug Fixes
+
+* remove vuetify dependency and replace with custom theme implementation ([33aa896](https://github.com/strmforge/vabhub/commit/33aa89626c519c2987791556c535db7a04f6d13d))
+
 ## [1.7.0](https://github.com/strmforge/vabhub/compare/v1.6.11...v1.7.0) (2025-11-02)
 
 
