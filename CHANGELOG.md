@@ -1,5 +1,13 @@
 # VabHub 更新日志
 
+## [1.6.1](https://github.com/strmforge/vabhub/compare/v1.6.0...v1.6.1) (2025-11-02)
+
+
+### Bug Fixes
+
+* update GitHub Actions cache paths and directory references ([1dea154](https://github.com/strmforge/vabhub/commit/1dea154751036cc96075884a0ba956b8d3466495))
+* update GitHub Actions release-please configuration for multi-repo structure ([af3e6a7](https://github.com/strmforge/vabhub/commit/af3e6a77c10e6f741a2a1422a1f65c6626f4b36b))
+
 ## [1.5.0] - 2025-10-29
 
 ### 🔧 多仓库版本管理优化
