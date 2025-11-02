@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.5](https://github.com/strmforge/vabhub/compare/v1.7.4...v1.7.5) (2025-11-02)
+
+
+### Bug Fixes
+
+* resolve Sass [@import](https://github.com/import) deprecation warnings and fix API import paths ([9635e8e](https://github.com/strmforge/vabhub/commit/9635e8e7b2ae86dcc064f52849ba906ee4f21602))
+
 ## [1.7.4](https://github.com/strmforge/vabhub/compare/v1.7.3...v1.7.4) (2025-11-02)
 
 
