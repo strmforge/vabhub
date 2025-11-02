@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.8](https://github.com/strmforge/vabhub/compare/v1.7.7...v1.7.8) (2025-11-02)
+
+
+### Bug Fixes
+
+* add missing createFriendlyMessage export in errorHandler.js ([ea63962](https://github.com/strmforge/vabhub/commit/ea63962c53a2ae45cedf23db1d4be18cc4bf6b39))
+
 ## [1.7.7](https://github.com/strmforge/vabhub/compare/v1.7.6...v1.7.7) (2025-11-02)
 
 
