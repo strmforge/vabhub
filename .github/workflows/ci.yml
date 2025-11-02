@@ -77,10 +77,10 @@ jobs:
     - name: Build Docker image
       uses: docker/build-push-action@v6
       with:
-        context: .
-        file: ./Dockerfile
+        context: ./vabhub-Core
+        file: ./vabhub-Core/Dockerfile
         platforms: linux/amd64
         push: false
-        tags: vabhub:ci-test
+        tags: vabhub-core:ci-test
         cache-from: type=gha
         cache-to: type=gha,mode=max
