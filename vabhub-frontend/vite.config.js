@@ -6,9 +6,6 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { visualizer } from 'rollup-plugin-visualizer'
 import autoprefixer from 'autoprefixer'
-import autoprefixer from 'autoprefixer'
-import autoprefixer from 'autoprefixer'
-import autoprefixer from 'autoprefixer'
 
 export default defineConfig({
   plugins: [
