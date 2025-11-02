@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.6](https://github.com/strmforge/vabhub/compare/v1.7.5...v1.7.6) (2025-11-02)
+
+
+### Bug Fixes
+
+* create missing utils files to resolve build errors ([95f2261](https://github.com/strmforge/vabhub/commit/95f2261c6e0a785e30a79952a79843e281844e1e))
+
 ## [1.7.5](https://github.com/strmforge/vabhub/compare/v1.7.4...v1.7.5) (2025-11-02)
 
 
