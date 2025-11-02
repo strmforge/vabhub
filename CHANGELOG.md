@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.10](https://github.com/strmforge/vabhub/compare/v1.7.9...v1.7.10) (2025-11-02)
+
+
+### Bug Fixes
+
+* replace Magic icon with Star icon to resolve build error ([b2ef0f3](https://github.com/strmforge/vabhub/commit/b2ef0f3298a78645d4f5f738b246304c0eca9b21))
+
 ## [1.7.9](https://github.com/strmforge/vabhub/compare/v1.7.8...v1.7.9) (2025-11-02)
 
 
