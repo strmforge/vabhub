@@ -191,3 +191,18 @@ export const withErrorBoundary = (component, fallbackComponent) => {
     }
   }
 }
+
+/**
+ * 创建友好的错误消息（独立函数）
+ */
+export function createFriendlyMessage(error) {
+  const messages = {
+    [ErrorTypes.NETWORK_ERROR]: '网络连接失败，请检查网络设置',
+    [ErrorTypes.API_ERROR]: '服务器请求失败，请稍后重试',
+    [ErrorTypes.VALIDATION_ERROR]: '输入数据格式不正确',
+    [ErrorTypes.AUTH_ERROR]: '身份验证失败，请重新登录',
+    [ErrorTypes.UNKNOWN_ERROR]: '系统发生未知错误'
+  }
+
+  return messages[error.type] || messages[ErrorTypes.UNKNOWN_ERROR]
+}
