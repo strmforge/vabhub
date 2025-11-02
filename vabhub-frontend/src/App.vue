@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { checkPrefersColorSchemeIsDark } from '@/@core/utils'
 import { ensureRenderComplete, removeEl } from './@core/utils/dom'
-import api from '@/api'
+import ApiService from '@/services/api'
 import { useAuthStore, useGlobalSettingsStore } from '@/stores'
 import { getBrowserLocale, setI18nLanguage } from './plugins/i18n'
 import { SupportedLocale } from '@/types/i18n'
@@ -91,7 +91,7 @@ function updateHtmlThemeAttribute(themeName: string) {
 async function fetchBackgroundImages() {
   try {
     const controller = new AbortController()
-    backgroundImages.value = await api.get(`/login/wallpapers`, {
+    backgroundImages.value = await ApiService.get(`/login/wallpapers`, {
       signal: controller.signal,
     })
     activeImageIndex.value = 0
