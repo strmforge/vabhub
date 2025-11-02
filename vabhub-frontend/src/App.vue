@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useTheme } from 'vuetify'
 import { checkPrefersColorSchemeIsDark } from '@/@core/utils'
 import { ensureRenderComplete, removeEl } from './@core/utils/dom'
 import api from '@/api'
@@ -14,10 +13,9 @@ import PWAInstallPrompt from '@/components/PWAInstallPrompt.vue'
 import { themeManager } from '@/utils/themeManager'
 
 // 生效主题
-const { global: globalTheme } = useTheme()
 let themeValue = localStorage.getItem('theme') || 'light'
 const autoTheme = checkPrefersColorSchemeIsDark() ? 'dark' : 'light'
-globalTheme.name.value = themeValue === 'auto' ? autoTheme : themeValue
+const currentTheme = ref(themeValue === 'auto' ? autoTheme : themeValue)
 
 // 生效语言
 const localeValue = getBrowserLocale()
@@ -36,7 +34,7 @@ const loginStateKey = computed(() => (isLogin.value ? 'logged-in' : 'logged-out'
 // 背景图片
 const backgroundImages = ref<string[]>([])
 const activeImageIndex = ref(0)
-const isTransparentTheme = computed(() => globalTheme.name.value === 'transparent')
+const isTransparentTheme = computed(() => currentTheme.value === 'transparent')
 
 // ApexCharts 全局配置
 declare global {
@@ -50,8 +48,8 @@ function configureApexCharts() {
   if (typeof window !== 'undefined' && window.Apex) {
     try {
       // 获取当前主题
-      const currentTheme = globalTheme.name.value
-      const isDark = currentTheme === 'dark' || currentTheme === 'transparent'
+      const currentThemeValue = currentTheme.value
+      const isDark = currentThemeValue === 'dark' || currentThemeValue === 'transparent'
 
       // 数据标签
       window.Apex.dataLabels = {
@@ -211,14 +209,14 @@ onMounted(async () => {
   configureApexCharts()
 
   // 初始化data-theme属性
-  updateHtmlThemeAttribute(globalTheme.name.value)
+  updateHtmlThemeAttribute(currentTheme.value)
 
   // 初始化主题管理器 - 统一处理主题初始化
   await themeManager.setTheme(themeValue)
 
   // 监听主题变化
   watch(
-    () => globalTheme.name.value,
+    () => currentTheme.value,
     newTheme => {
       // 更新HTML主题属性
       updateHtmlThemeAttribute(newTheme)
@@ -257,11 +255,11 @@ onUnmounted(() => {
       <div v-if="isLogin && isTransparentTheme" class="global-blur-layer"></div>
     </div>
     <!-- 页面内容 -->
-    <VApp>
+    <div class="app-content">
       <RouterView />
       <!-- PWA安装提示 -->
       <PWAInstallPrompt />
-    </VApp>
+    </div>
   </div>
 </template>
 
