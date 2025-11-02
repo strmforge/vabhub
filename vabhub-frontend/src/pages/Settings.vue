@@ -35,7 +35,7 @@
             <span>存储设置</span>
           </el-menu-item>
           <el-menu-item index="plugins">
-            <el-icon><Magic /></el-icon>
+            <el-icon><Star /></el-icon>
             <span>插件设置</span>
           </el-menu-item>
           <el-menu-item index="security">
@@ -299,7 +299,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
-  Setting, Brush, Bell, Folder, Magic, Lock, InfoFilled, Loading
+  Setting, Brush, Bell, Folder, Star, Lock, InfoFilled, Loading
 } from '@element-plus/icons-vue'
 import ApiService from '@/services/api'
 

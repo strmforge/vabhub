@@ -115,7 +115,7 @@
             {{ $t('common.discover') }}
           </el-button>
           <el-button class="action-btn" @click="navigateTo('plugins')">
-            <el-icon><Magic /></el-icon>
+            <el-icon><Star /></el-icon>
             {{ $t('plugins.title') }}
           </el-button>
           <el-button class="action-btn" @click="navigateTo('storage')">
@@ -146,7 +146,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { 
   Refresh, VideoCamera, Collection, DataAnalysis, Bell,
-  Search, Magic, Folder, Setting, Loading
+  Search, Star, Folder, Setting, Loading
 } from '@element-plus/icons-vue'
 import ApiService from '@/services/api'
 
@@ -197,7 +197,7 @@ const formatTime = (timestamp: string): string => {
 const getActivityIcon = (type: string) => {
   const icons = {
     media: 'VideoCamera',
-    plugin: 'Magic',
+    plugin: 'Star',
     system: 'Setting',
     notification: 'Bell'
   }
