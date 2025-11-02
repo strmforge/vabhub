@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.3](https://github.com/strmforge/vabhub/compare/v1.7.2...v1.7.3) (2025-11-02)
+
+
+### Bug Fixes
+
+* replace JSX syntax in OnlineMusic.vue with standard Vue template syntax ([15b4435](https://github.com/strmforge/vabhub/commit/15b4435eeb484834f4989a9fb917d0ef7a5b7a3e))
+
 ## [1.7.2](https://github.com/strmforge/vabhub/compare/v1.7.1...v1.7.2) (2025-11-02)
 
 
