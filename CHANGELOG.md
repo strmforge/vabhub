@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.11](https://github.com/strmforge/vabhub/compare/v1.7.10...v1.7.11) (2025-11-02)
+
+
+### Bug Fixes
+
+* correct siteBundleApi import to use ApiService.siteBundle ([459342b](https://github.com/strmforge/vabhub/commit/459342b793bcbe137254230e4f31b85f437869a0))
+
 ## [1.7.10](https://github.com/strmforge/vabhub/compare/v1.7.9...v1.7.10) (2025-11-02)
 
 
