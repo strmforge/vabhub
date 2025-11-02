@@ -23,7 +23,7 @@
         <div class="playlist-cover">
           <img v-if="playlist.cover" :src="playlist.cover" :alt="playlist.name" />
           <div v-else class="cover-placeholder">
-            <el-icon><Music /></el-icon>
+            <el-icon><Headphone /></el-icon>
           </div>
           <div class="playlist-overlay">
             <div class="play-count">{{ playlist.playCount }} 次播放</div>
@@ -137,7 +137,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Upload, Music, MoreFilled } from '@element-plus/icons-vue'
+import { Plus, Upload, Headphone, MoreFilled } from '@element-plus/icons-vue'
 
 interface Playlist {
   id: string
