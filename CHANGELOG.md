@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.8](https://github.com/strmforge/vabhub/compare/v1.6.7...v1.6.8) (2025-11-02)
+
+
+### Bug Fixes
+
+* 修复 vite.config.js 中的 ES 模块导入错误 ([3e426ed](https://github.com/strmforge/vabhub/commit/3e426ed02ab95e257e56d305e0c194813880e5d5))
+
 ## [1.6.7](https://github.com/strmforge/vabhub/compare/v1.6.6...v1.6.7) (2025-11-02)
 
 
