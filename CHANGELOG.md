@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.7.4](https://github.com/strmforge/vabhub/compare/v1.7.3...v1.7.4) (2025-11-02)
+
+
+### Bug Fixes
+
+* create missing @core/utils modules and fix import paths ([77c1737](https://github.com/strmforge/vabhub/commit/77c173786ecb37162dcf1075bf6a58d5dd46f0d9))
+
 ## [1.7.3](https://github.com/strmforge/vabhub/compare/v1.7.2...v1.7.3) (2025-11-02)
 
 
