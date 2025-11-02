@@ -1,0 +1,112 @@
+# VabHub 统一配置文件
+# 此文件使用新的配置管理器，支持环境变量覆盖和配置验证
+
+# 应用基础配置
+app_name: "VabHub"
+app_version: "1.6.0"
+environment: "development"
+debug: false
+secret_key: ""
+
+# 服务器配置
+server:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  reload: false
+  access_log: true
+  cors_origins:
+    - "*"
+
+# 数据库配置
+database:
+  url: "sqlite:///vabhub.db"
+  host: "localhost"
+  port: 5432
+  name: "vabhub"
+  user: "vabhub"
+  password: ""
+  pool_size: 10
+  max_overflow: 20
+  echo: false
+
+# Redis配置
+redis:
+  url: "redis://localhost:6379"
+  host: "localhost"
+  port: 6379
+  password: ""
+  db: 0
+  max_connections: 10
+  prefix: "vabhub:"
+
+# 缓存配置 - 优化后的多级缓存策略
+cache:
+  # 基础配置
+  ttl: 3600
+  
+  # 内存缓存配置
+  memory_max_size: 5000
+  memory_policy: "lru"
+  
+  # 磁盘缓存配置
+  disk_max_size: 50000
+  disk_directory: ".cache"
+  
+  # Redis缓存配置
+  redis_prefix: "vabhub:"
+  redis_max_connections: 20
+
+# 日志配置
+logging:
+  level: "INFO"
+  file: "logs/vabhub.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  max_size: 10485760
+  backup_count: 5
+
+# 外部API配置（敏感信息请使用环境变量）
+api:
+  # TMDB API配置
+  tmdb_api_key: ""
+  
+  # Spotify API配置
+  spotify_client_id: ""
+  spotify_client_secret: ""
+  
+  # 音乐平台API配置
+  y123_client_id: ""
+  y123_client_secret: ""
+  y123_refresh_token: ""
+  
+  y115_client_id: ""
+  y115_client_secret: ""
+  y115_refresh_token: ""
+
+# 插件配置
+plugins:
+  enabled_plugins:
+    - "media_info"
+    - "download_manager"
+    - "notification"
+    - "search"
+    - "douban_fallback"
+    - "jellyfin_parity"
+    - "stream_gateway"
+  plugin_dir: "plugins"
+  auto_discover: true
+  hot_reload: false
+
+# 性能配置 - 优化后的企业级配置
+performance:
+  # 并发配置
+  max_workers: 20
+  
+  # 超时配置
+  timeout: 60
+  
+  # 重试配置
+  retry_attempts: 5
+  
+  # 批量操作配置
+  batch_size: 100

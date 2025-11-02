@@ -1,0 +1,117 @@
+# 榜单数据源配置
+charts:
+  # TMDB榜单配置
+  tmdb:
+    enabled: true
+    name: "TMDB电影榜单"
+    api_key: "${TMDB_API_KEY}"
+    base_url: "https://api.themoviedb.org/3"
+    endpoints:
+      trending: "/trending/movie/week"
+      popular: "/movie/popular"
+      top_rated: "/movie/top_rated"
+    cache_ttl: 3600  # 1小时
+
+  # 豆瓣榜单配置
+  douban:
+    enabled: true
+    name: "豆瓣电影榜单"
+    base_url: "https://movie.douban.com"
+    endpoints:
+      weekly: "/chart"
+      new_movies: "/new_movies"
+    cache_ttl: 7200  # 2小时
+
+  # QQ音乐榜单配置
+  qq_music:
+    enabled: true
+    name: "QQ音乐榜单"
+    base_url: "https://c.y.qq.com"
+    endpoints:
+      hot_songs: "/v8/fcg-bin/fcg_v8_toplist_cp.fcg"
+      new_songs: "/v8/fcg-bin/fcg_v8_toplist_opt.fcg"
+    cache_ttl: 1800  # 30分钟
+
+  # 网易云音乐榜单配置
+  netease:
+    enabled: true
+    name: "网易云音乐榜单"
+    base_url: "https://music.163.com"
+    endpoints:
+      top_list: "/api/top/list"
+      new_songs: "/api/personalized/newsong"
+    cache_ttl: 1800  # 30分钟
+
+  # TME由你榜配置
+  tme_youni:
+    enabled: true
+    name: "TME由你榜"
+    base_url: "https://youni.qq.com"
+    endpoints:
+      chart: "/api/chart"
+    cache_ttl: 3600  # 1小时
+
+  # Billboard China TME配置
+  billboard_china:
+    enabled: true
+    name: "Billboard China TME"
+    base_url: "https://billboard.tme.com"
+    endpoints:
+      chart: "/api/chart"
+    cache_ttl: 86400  # 24小时
+
+# 榜单数据聚合配置
+data_aggregation:
+  # 数据源优先级（数字越小优先级越高）
+  source_priority:
+    tmdb: 1
+    douban: 2
+    tme_youni: 3
+    billboard_china: 4
+    qq_music: 5
+    netease: 6
+
+  # 数据合并策略
+  merge_strategy: "weighted_average"
+  
+  # 权重配置
+  weights:
+    tmdb: 0.3
+    douban: 0.25
+    tme_youni: 0.2
+    billboard_china: 0.15
+    qq_music: 0.05
+    netease: 0.05
+
+# 榜单显示配置
+display_settings:
+  # 每页显示数量
+  items_per_page: 20
+  
+  # 榜单类型
+  chart_types:
+    - name: "综合榜单"
+      type: "comprehensive"
+      sources: ["tmdb", "douban"]
+    - name: "音乐榜单"
+      type: "music"
+      sources: ["tme_youni", "billboard_china", "qq_music", "netease"]
+    - name: "电影榜单"
+      type: "movie"
+      sources: ["tmdb", "douban"]
+
+# 缓存配置
+cache_config:
+  # Redis缓存配置
+  redis:
+    enabled: true
+    host: "${REDIS_HOST:-localhost}"
+    port: ${REDIS_PORT:-6379}
+    db: ${REDIS_DB:-0}
+    password: "${REDIS_PASSWORD}"
+    
+  # 内存缓存配置
+  memory:
+    enabled: true
+    max_size: 1000
+    default_ttl: 300  # 5分钟

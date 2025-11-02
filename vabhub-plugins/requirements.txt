@@ -1,0 +1,19 @@
+# Core dependencies
+requests>=2.31.0
+beautifulsoup4>=4.12.2
+lxml>=4.9.3
+pandas>=2.1.3
+pyyaml>=6.0.1
+python-dotenv>=1.0.0
+
+# Optional dependencies for charts
+scikit-learn>=1.3.2
+numpy>=1.25.2
+
+# Development dependencies
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+black>=23.9.1
+isort>=5.12.0
+flake8>=6.0.0
+mypy>=1.5.1

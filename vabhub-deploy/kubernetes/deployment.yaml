@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vabhub-api
+  namespace: vabhub
+  labels:
+    app: vabhub-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vabhub-api
+  template:
+    metadata:
+      labels:
+        app: vabhub-api
+    spec:
+      containers:
+      - name: vabhub-api
+        image: vabhub/api:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: vabhub-config
+        - secretRef:
+            name: vabhub-secrets
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vabhub-frontend
+  namespace: vabhub
+  labels:
+    app: vabhub-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vabhub-frontend
+  template:
+    metadata:
+      labels:
+        app: vabhub-frontend
+    spec:
+      containers:
+      - name: vabhub-frontend
+        image: vabhub/frontend:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10

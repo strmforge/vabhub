@@ -1,0 +1,57 @@
+[
+  {
+    "id": "mteam",
+    "name": "M-Team",
+    "url": "https://tp.m-team.cc",
+    "enabled": true,
+    "api_key": "",
+    "search_endpoint": "/api/torrent/search",
+    "categories": ["movie", "tv", "music"],
+    "priority": 1,
+    "last_updated": "2024-01-15T10:00:00"
+  },
+  {
+    "id": "hdchina",
+    "name": "HDChina",
+    "url": "https://hdchina.org",
+    "enabled": true,
+    "api_key": "",
+    "search_endpoint": "/api.php",
+    "categories": ["movie", "tv"],
+    "priority": 2,
+    "last_updated": "2024-01-15T10:00:00"
+  },
+  {
+    "id": "ttg",
+    "name": "TTG",
+    "url": "https://totheglory.im",
+    "enabled": true,
+    "api_key": "",
+    "search_endpoint": "/json.php",
+    "categories": ["movie", "tv", "game"],
+    "priority": 3,
+    "last_updated": "2024-01-15T10:00:00"
+  },
+  {
+    "id": "hdbits",
+    "name": "HDBits",
+    "url": "https://hdbits.org",
+    "enabled": false,
+    "api_key": "",
+    "search_endpoint": "/api",
+    "categories": ["movie", "tv"],
+    "priority": 4,
+    "last_updated": "2024-01-15T10:00:00"
+  },
+  {
+    "id": "pterclub",
+    "name": "PterClub",
+    "url": "https://pterclub.com",
+    "enabled": true,
+    "api_key": "",
+    "search_endpoint": "/api.php",
+    "categories": ["movie", "tv", "anime"],
+    "priority": 5,
+    "last_updated": "2024-01-15T10:00:00"
+  }
+]

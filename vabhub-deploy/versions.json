@@ -1,0 +1,19 @@
+{
+  "release": "1.5.0",
+  "core": "1.5.0",
+  "frontend": "1.5.0", 
+  "plugins": "1.5.0",
+  "resources": "1.5.0",
+  "compatibility": {
+    "vabhub-core": ">=1.5.0",
+    "vabhub-frontend": ">=1.5.0",
+    "vabhub-plugins": ">=1.5.0",
+    "vabhub-resources": ">=1.5.0"
+  },
+  "docker_images": {
+    "vabhub": "ghcr.io/strmforge/vabhub:v1.5.0",
+    "vabhub-core": "ghcr.io/strmforge/vabhub-core:v1.5.0",
+    "vabhub-frontend": "ghcr.io/strmforge/vabhub-frontend:v1.5.0"
+  },
+  "last_updated": "2025-10-30"
+}

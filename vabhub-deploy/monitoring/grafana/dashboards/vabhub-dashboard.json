@@ -1,0 +1,94 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "VabHub 监控面板",
+    "tags": ["vabhub", "media", "streaming"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "系统状态",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "up{job=\"vabhub-core\"}",
+            "legendFormat": "Core 服务"
+          },
+          {
+            "expr": "up{job=\"vabhub-web\"}",
+            "legendFormat": "Web 服务"
+          },
+          {
+            "expr": "up{job=\"postgres\"}",
+            "legendFormat": "数据库"
+          },
+          {
+            "expr": "up{job=\"redis\"}",
+            "legendFormat": "Redis"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "API 请求率",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "请求率"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        }
+      },
+      {
+        "id": 3,
+        "title": "内存使用",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "process_resident_memory_bytes",
+            "legendFormat": "内存使用"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 4,
+        "title": "CPU 使用率",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(process_cpu_seconds_total[5m]) * 100",
+            "legendFormat": "CPU 使用率"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        }
+      }
+    ],
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    }
+  }
+}

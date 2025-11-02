@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vabhub-api-service
+  namespace: vabhub
+spec:
+  selector:
+    app: vabhub-api
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vabhub-frontend-service
+  namespace: vabhub
+spec:
+  selector:
+    app: vabhub-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  type: ClusterIP

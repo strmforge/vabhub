@@ -1,0 +1,13 @@
+{
+  "install": [
+    "cd /workspace/vabhub-frontend",
+    "npm install",
+    "npm run build"
+  ],
+  "start": [
+    "cd /workspace/vabhub-frontend",
+    "npx serve dist -p 5173"
+  ],
+  "description": "VabHub前端界面 - 包含音乐管理功能",
+  "port": 5173
+}

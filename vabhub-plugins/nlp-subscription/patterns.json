@@ -1,0 +1,72 @@
+[
+  {
+    "name": "movie_subscription",
+    "description": "电影订阅模式",
+    "pattern": "(订阅|下载|关注)(.*?)(的电影|电影作品)",
+    "examples": ["订阅诺兰的电影", "下载科幻电影", "关注动作电影"],
+    "output_fields": ["type=movie", "title={match2}"]
+  },
+  {
+    "name": "movie_with_quality",
+    "description": "带质量要求的电影订阅",
+    "pattern": "(订阅|下载)(.*?)(的)?(4K|1080p|720p)(电影|影片)",
+    "examples": ["订阅4K电影", "下载1080p的科幻影片"],
+    "output_fields": ["type=movie", "title={match2}", "resolution={match4}"]
+  },
+  {
+    "name": "movie_by_year",
+    "description": "按年份订阅电影",
+    "pattern": "(订阅|下载)(\\d{4})年(.*?)(的电影|影片)",
+    "examples": ["订阅2023年电影", "下载2020年科幻影片"],
+    "output_fields": ["type=movie", "year={match2}", "title={match3}"]
+  },
+  {
+    "name": "tv_series",
+    "description": "电视剧订阅模式",
+    "pattern": "(订阅|下载|关注)(.*?)(的电视剧|剧集|美剧)",
+    "examples": ["订阅权力的游戏的电视剧", "下载科幻剧集"],
+    "output_fields": ["type=tv", "title={match2}"]
+  },
+  {
+    "name": "tv_season",
+    "description": "按季订阅电视剧",
+    "pattern": "(订阅|下载)(.*?)第(\\d+)季",
+    "examples": ["订阅权力的游戏第8季", "下载行尸走肉第10季"],
+    "output_fields": ["type=tv", "title={match2}", "season={match3}"]
+  },
+  {
+    "name": "director_subscription",
+    "description": "导演作品订阅",
+    "pattern": "(订阅|下载|关注)(.*?)(导演|执导)(的电影|作品)",
+    "examples": ["订阅诺兰导演的电影", "关注李安执导的作品"],
+    "output_fields": ["type=movie", "director={match2}"]
+  },
+  {
+    "name": "actor_subscription",
+    "description": "演员作品订阅",
+    "pattern": "(订阅|下载|关注)(.*?)(主演|出演|参演)(的电影|作品)",
+    "examples": ["订阅汤姆·汉克斯主演的电影", "关注斯嘉丽·约翰逊出演的作品"],
+    "output_fields": ["type=movie", "actor={match2}"]
+  },
+  {
+    "name": "quality_requirement",
+    "description": "质量要求",
+    "pattern": "(只要|仅下载)(4K|1080p|720p|高清|蓝光)",
+    "examples": ["只要4K", "仅下载1080p"],
+    "output_fields": ["resolution={match2}"]
+  },
+  {
+    "name": "exclude_quality",
+    "description": "排除低质量",
+    "pattern": "(不要|排除)(标清|480p|低质量)",
+    "examples": ["不要标清", "排除480p"],
+    "output_fields": ["exclude_resolution={match2}"]
+  },
+  {
+    "name": "genre_subscription",
+    "description": "类型订阅",
+    "pattern": "(订阅|下载)(.*?)(类型|风格)(的电影|影片)",
+    "examples": ["订阅科幻类型的电影", "下载恐怖风格的影片"],
+    "output_fields": ["type=movie", "genre={match2}"]
+  }
+]

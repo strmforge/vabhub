@@ -1,0 +1,8 @@
+{
+  "plugin_name": "vabhub-plugin",
+  "plugin_id": "{{ cookiecutter.plugin_name|lower|replace(' ', '-') }}",
+  "plugin_description": "A VabHub plugin",
+  "plugin_author": "Your Name",
+  "plugin_version": "1.0.0",
+  "python_version": "3.8+"
+}

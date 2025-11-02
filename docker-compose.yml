@@ -1,26 +1,38 @@
-# VabHub v1.5.0 统一部署配置
+# VabHub v1.6.0 统一部署配置
 # 用户只需运行: docker-compose up -d
 
 version: '3.8'
 
 services:
   vabhub:
-    image: ghcr.io/strmforge/vabhub:v1.5.0
+    image: ghcr.io/strmforge/vabhub:v1.6.0
     container_name: vabhub
     hostname: vabhub
     ports:
       - "4000:4000"     # 前端界面 (默认)
       - "4001:4001"     # 后端API端口 (默认)
+      - "4002:4002"     # GraphQL API端口 (新增)
+      - "9090:9090"     # 监控指标端口 (新增)
     volumes:
       - ./data:/app/data          # 应用数据
       - ./config:/app/config      # 配置文件
+      - ./models:/app/models      # AI模型目录 (新增)
+      - ./cache:/app/cache        # 缓存目录 (新增)
       - /media:/media             # 媒体文件挂载
     environment:
       - VABHUB_ENV=production
       - API_HOST=0.0.0.0
       - API_PORT=4001
+      - GRAPHQL_PORT=4002         # GraphQL端口 (新增)
+      - METRICS_PORT=9090         # 监控端口 (新增)
       - FRONTEND_PORT=4000
       - TZ=Asia/Shanghai
+      - ENABLE_AI_RECOMMENDATION=true  # AI推荐开关 (新增)
+      - ENABLE_GRAPHQL_API=true        # GraphQL开关 (新增)
+      - ENABLE_METRICS=true            # 监控开关 (新增)
+    depends_on:
+      - postgres
+      - redis
     restart: unless-stopped
     
   # 数据库服务

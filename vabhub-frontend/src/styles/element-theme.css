@@ -1,0 +1,338 @@
+/* Element Plus 主题定制 */
+
+/* 主色调定制 */
+:root {
+  /* 品牌色 */
+  --el-color-primary: #409eff;
+  --el-color-primary-light-3: #79bbff;
+  --el-color-primary-light-5: #a0cfff;
+  --el-color-primary-light-7: #c6e2ff;
+  --el-color-primary-light-8: #d9ecff;
+  --el-color-primary-light-9: #ecf5ff;
+  --el-color-primary-dark-2: #337ecc;
+  
+  /* 成功色 */
+  --el-color-success: #67c23a;
+  --el-color-success-light-3: #95d475;
+  --el-color-success-light-5: #b3e19d;
+  --el-color-success-light-7: #d1edc4;
+  --el-color-success-light-8: #e1f3d8;
+  --el-color-success-light-9: #f0f9eb;
+  --el-color-success-dark-2: #529b2e;
+  
+  /* 警告色 */
+  --el-color-warning: #e6a23c;
+  --el-color-warning-light-3: #eebe77;
+  --el-color-warning-light-5: #f3d19e;
+  --el-color-warning-light-7: #f8e3c5;
+  --el-color-warning-light-8: #faecd8;
+  --el-color-warning-light-9: #fdf6ec;
+  --el-color-warning-dark-2: #b88230;
+  
+  /* 危险色 */
+  --el-color-danger: #f56c6c;
+  --el-color-danger-light-3: #f89898;
+  --el-color-danger-light-5: #fab6b6;
+  --el-color-danger-light-7: #fcd3d3;
+  --el-color-danger-light-8: #fde2e2;
+  --el-color-danger-light-9: #fef0f0;
+  --el-color-danger-dark-2: #c45656;
+  
+  /* 信息色 */
+  --el-color-info: #909399;
+  --el-color-info-light-3: #b1b3b8;
+  --el-color-info-light-5: #c8c9cc;
+  --el-color-info-light-7: #dedfe0;
+  --el-color-info-light-8: #e9e9eb;
+  --el-color-info-light-9: #f4f4f5;
+  --el-color-info-dark-2: #73767a;
+}
+
+/* 暗色主题 */
+[data-theme="dark"] {
+  --el-color-primary: #409eff;
+  --el-color-primary-light-3: #3375b9;
+  --el-color-primary-light-5: #2a598a;
+  --el-color-primary-light-7: #213d5b;
+  --el-color-primary-light-8: #1d3046;
+  --el-color-primary-light-9: #18222c;
+  --el-color-primary-dark-2: #66b1ff;
+}
+
+/* 按钮样式定制 */
+.el-button {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.el-button--primary {
+  box-shadow: 0 2px 4px rgba(64, 158, 255, 0.3);
+}
+
+.el-button--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.4);
+}
+
+.el-button--primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(64, 158, 255, 0.3);
+}
+
+/* 输入框样式定制 */
+.el-input {
+  border-radius: 6px;
+}
+
+.el-input__inner {
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.el-input__inner:focus {
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+
+/* 表格样式定制 */
+.el-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.el-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped td {
+  background-color: #fafbfc;
+}
+
+/* 卡片样式定制 */
+.el-card {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.el-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 菜单样式定制 */
+.el-menu {
+  border-right: none;
+}
+
+.el-menu-item {
+  border-radius: 6px;
+  margin: 2px 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.el-menu-item:hover {
+  background-color: var(--el-color-primary-light-9);
+}
+
+.el-menu-item.is-active {
+  background-color: var(--el-color-primary-light-8);
+  color: var(--el-color-primary);
+  font-weight: 600;
+}
+
+/* 标签页样式定制 */
+.el-tabs {
+  border-radius: 8px;
+}
+
+.el-tabs__header {
+  margin-bottom: 0;
+}
+
+.el-tabs__item {
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.el-tabs__item.is-active {
+  color: var(--el-color-primary);
+  font-weight: 600;
+}
+
+/* 消息提示样式定制 */
+.el-message {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 加载样式定制 */
+.el-loading-mask {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] .el-loading-mask {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* 分页样式定制 */
+.el-pagination {
+  justify-content: center;
+}
+
+.el-pagination.is-background .el-pager li {
+  border-radius: 6px;
+  margin: 0 2px;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: var(--el-color-primary);
+}
+
+/* 对话框样式定制 */
+.el-dialog {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.el-dialog__header {
+  padding: 20px 20px 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.el-dialog__body {
+  padding: 20px;
+}
+
+.el-dialog__footer {
+  padding: 10px 20px 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* 下拉菜单样式定制 */
+.el-dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: none;
+}
+
+.el-dropdown-menu__item {
+  border-radius: 4px;
+  margin: 2px 4px;
+}
+
+/* 进度条样式定制 */
+.el-progress {
+  width: 100%;
+}
+
+.el-progress-bar {
+  border-radius: 4px;
+}
+
+.el-progress-bar__inner {
+  border-radius: 4px;
+  transition: width 0.3s ease-in-out;
+}
+
+/* 自定义组件样式 */
+.vab-button {
+  @apply el-button;
+  position: relative;
+  overflow: hidden;
+}
+
+.vab-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.vab-button:hover::before {
+  left: 100%;
+}
+
+.vab-card {
+  @apply el-card;
+  position: relative;
+}
+
+.vab-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--el-color-primary), var(--el-color-success));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.vab-card:hover::before {
+  opacity: 1;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .el-dialog {
+    width: 95% !important;
+    margin: 20px auto;
+  }
+  
+  .el-table {
+    font-size: 12px;
+  }
+  
+  .el-pagination {
+    padding: 10px 0;
+  }
+  
+  .el-pagination .btn-prev,
+  .el-pagination .btn-next,
+  .el-pagination .el-pager li {
+    min-width: 32px;
+    height: 32px;
+    line-height: 32px;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.el-dialog {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.el-message {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 打印样式 */
+@media print {
+  .el-button,
+  .el-pagination,
+  .el-dialog__footer {
+    display: none !important;
+  }
+  
+  .el-table {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+}

@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  # 核心后端服务
+  core:
+    build:
+      context: ./workspace/vabhub-Core
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+      - VABHUB_ENV=${VABHUB_ENV:-development}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
+    volumes:
+      - ./workspace/vabhub-Core:/app
+      - vabhub_data:/app/data
+    ports:
+      - "${CORE_PORT:-8080}:8000"
+    networks:
+      - vabhub_network
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  # 前端Web服务
+  web:
+    build:
+      context: ./workspace/vabhub-frontend
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${WEB_PORT:-8090}
+      - API_BASE_URL=http://core:8000
+    volumes:
+      - ./workspace/vabhub-frontend:/workspace
+    ports:
+      - "${WEB_PORT:-8090}:${WEB_PORT:-8090}"
+    networks:
+      - vabhub_network
+    depends_on:
+      - core
+    restart: unless-stopped
+
+  # PostgreSQL数据库
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-vabhub}
+      - POSTGRES_USER=${POSTGRES_USER:-vabhub}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - vabhub_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis缓存
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - vabhub_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx反向代理 (可选)
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - vabhub_network
+    depends_on:
+      - web
+      - core
+    restart: unless-stopped
+
+  # 监控服务 (可选)
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - vabhub_network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3000:3000"
+    networks:
+      - vabhub_network
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  vabhub_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  vabhub_network:
+    driver: bridge

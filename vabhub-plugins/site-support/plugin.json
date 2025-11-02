@@ -1,0 +1,11 @@
+{
+  "id": "site-support",
+  "name": "站点支持插件",
+  "version": "1.0.0",
+  "description": "支持多个PT站点的自动搜索和下载功能",
+  "author": "VabHub Team",
+  "type": "site",
+  "enabled": true,
+  "configurable": true,
+  "dependencies": []
+}

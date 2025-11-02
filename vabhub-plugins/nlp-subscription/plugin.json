@@ -1,0 +1,11 @@
+{
+  "id": "nlp-subscription",
+  "name": "自然语言订阅",
+  "version": "1.0.0",
+  "description": "使用自然语言处理技术解析用户指令，自动创建订阅规则",
+  "author": "VabHub Team",
+  "type": "nlp",
+  "enabled": true,
+  "configurable": true,
+  "dependencies": []
+}

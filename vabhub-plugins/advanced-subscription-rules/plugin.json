@@ -1,0 +1,11 @@
+{
+  "id": "advanced-subscription-rules",
+  "name": "高级订阅规则",
+  "version": "1.0.0",
+  "description": "提供高级订阅规则功能，支持复杂条件组合",
+  "author": "VabHub Team",
+  "type": "subscription",
+  "enabled": true,
+  "configurable": true,
+  "dependencies": []
+}

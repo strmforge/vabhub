@@ -1,0 +1,74 @@
+# 代码所有者文件
+# 此文件定义了对代码库特定部分具有所有权的团队和个人
+
+# 全局默认所有者
+* @strmforge
+
+# 前端相关文件
+/frontend/ @vabhub/frontend-team
+/frontend/src/ @vabhub/frontend-team
+/frontend/package.json @vabhub/frontend-team
+/frontend/vite.config.* @vabhub/frontend-team
+
+# 后端核心文件
+/core/ @vabhub/backend-team
+/core/app/ @vabhub/backend-team
+/core/config/ @vabhub/backend-team
+/core/requirements.txt @vabhub/backend-team
+
+# 插件系统
+/plugins/ @vabhub/plugins-team
+/plugins/plugins/ @vabhub/plugins-team
+/plugins/setup.py @vabhub/plugins-team
+
+# 部署配置
+/deploy/ @vabhub/devops-team
+/deploy/docker/ @vabhub/devops-team
+/deploy/scripts/ @vabhub/devops-team
+/docker-compose.yml @vabhub/devops-team
+/Dockerfile @vabhub/devops-team
+
+# 资源文件
+/resources/ @vabhub/resources-team
+/resources/config/ @vabhub/resources-team
+/resources/docs/ @vabhub/resources-team
+
+# 文档文件
+README.md @vabhub/documentation-team
+CONTRIBUTING.md @vabhub/documentation-team
+SECURITY.md @vabhub/documentation-team
+/docs/ @vabhub/documentation-team
+
+# CI/CD 配置
+.github/workflows/ @vabhub/devops-team
+.github/dependabot.yml @vabhub/devops-team
+
+# 安全相关文件
+SECURITY.md @vabhub/security-team
+.gitleaks.toml @vabhub/security-team
+
+# 测试文件
+**/tests/ @vabhub/testing-team
+**/test_*.py @vabhub/testing-team
+**/*.test.js @vabhub/testing-team
+**/*.spec.js @vabhub/testing-team
+
+# 配置文件
+.env.example @vabhub/devops-team
+Makefile @vabhub/devops-team
+compose.yaml @vabhub/devops-team
+
+# 脚本文件
+/scripts/ @vabhub/devops-team
+**/*.sh @vabhub/devops-team
+**/*.py @vabhub/devops-team
+
+# 团队定义（需要在 GitHub 组织中创建这些团队）
+# @vabhub/frontend-team
+# @vabhub/backend-team  
+# @vabhub/plugins-team
+# @vabhub/devops-team
+# @vabhub/resources-team
+# @vabhub/documentation-team
+# @vabhub/security-team
+# @vabhub/testing-team

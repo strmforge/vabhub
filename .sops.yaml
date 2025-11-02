@@ -1,0 +1,4 @@
+# SOPS configuration file
+creation_rules:
+  - path_regex: secrets/.*\.enc$
+    age: "REPLACE_WITH_YOUR_AGE_PUBLIC_KEY"

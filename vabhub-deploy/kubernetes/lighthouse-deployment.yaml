@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vabhub-lighthouse
+  namespace: vabhub
+  labels:
+    app: vabhub-lighthouse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vabhub-lighthouse
+  template:
+    metadata:
+      labels:
+        app: vabhub-lighthouse
+    spec:
+      containers:
+      - name: lighthouse
+        image: vabhub/lighthouse:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: VABHUB_URL
+          value: "http://vabhub-frontend-service"
+        - name: RUN_MODE
+          value: "monitor"
+        - name: INTERVAL
+          value: "3600"
+        - name: WAIT_FOR_URL
+          value: "http://vabhub-frontend-service"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: reports
+          mountPath: /app/reports
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+      volumes:
+      - name: reports
+        persistentVolumeClaim:
+          claimName: lighthouse-reports-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vabhub-lighthouse-service
+  namespace: vabhub
+spec:
+  selector:
+    app: vabhub-lighthouse
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lighthouse-reports-pvc
+  namespace: vabhub
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

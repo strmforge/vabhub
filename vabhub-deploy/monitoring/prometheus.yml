@@ -1,0 +1,50 @@
+# Prometheus 监控配置
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # VabHub Core 服务监控
+  - job_name: 'vabhub-core'
+    static_configs:
+      - targets: ['core:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # VabHub Web 服务监控
+  - job_name: 'vabhub-web'
+    static_configs:
+      - targets: ['web:8090']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # PostgreSQL 数据库监控
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+    metrics_path: '/metrics'
+    scrape_interval: 60s
+
+  # Redis 缓存监控
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    metrics_path: '/metrics'
+    scrape_interval: 60s
+
+  # Nginx 监控
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:80']
+    metrics_path: '/nginx_status'
+    scrape_interval: 30s
+
+  # Node Exporter (系统监控)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 60s

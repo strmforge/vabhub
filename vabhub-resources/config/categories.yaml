@@ -1,0 +1,98 @@
+# 媒体分类配置
+categories:
+  # 电影分类
+  movie:
+    name: "电影"
+    enabled: true
+    priority: 1
+    subcategories:
+      - name: "动作"
+        keywords: ["动作", "冒险", "惊悚"]
+      - name: "喜剧"
+        keywords: ["喜剧", "搞笑", "幽默"]
+      - name: "剧情"
+        keywords: ["剧情", "文艺", "情感"]
+      - name: "科幻"
+        keywords: ["科幻", "未来", "太空"]
+      - name: "恐怖"
+        keywords: ["恐怖", "惊悚", "悬疑"]
+      - name: "动画"
+        keywords: ["动画", "卡通", "动漫"]
+
+  # 电视剧分类
+  tv:
+    name: "电视剧"
+    enabled: true
+    priority: 2
+    subcategories:
+      - name: "国产剧"
+        keywords: ["国产", "大陆", "华语"]
+      - name: "美剧"
+        keywords: ["美剧", "美国", "欧美"]
+      - name: "韩剧"
+        keywords: ["韩剧", "韩国", "韩流"]
+      - name: "日剧"
+        keywords: ["日剧", "日本", "日系"]
+      - name: "英剧"
+        keywords: ["英剧", "英国", "BBC"]
+
+  # 音乐分类
+  music:
+    name: "音乐"
+    enabled: true
+    priority: 1  # 提升优先级，与电影平权
+    subcategories:
+      - name: "流行"
+        keywords: ["流行", "Pop", "热门", "华语", "国语"]
+      - name: "摇滚"
+        keywords: ["摇滚", "Rock", "金属", "朋克", "硬核"]
+      - name: "电子"
+        keywords: ["电子", "EDM", "电音", "舞曲", "电子乐"]
+      - name: "古典"
+        keywords: ["古典", "交响", "钢琴", "小提琴", "古典乐"]
+      - name: "民谣"
+        keywords: ["民谣", "乡村", "吉他", "民谣乐", "乡村音乐"]
+      - name: "说唱"
+        keywords: ["说唱", "Rap", "嘻哈", "HipHop", "饶舌"]
+      - name: "爵士"
+        keywords: ["爵士", "Jazz", "蓝调", "布鲁斯"]
+      - name: "轻音乐"
+        keywords: ["轻音乐", "纯音乐", "背景音乐", "BGM"]
+      - name: "影视原声"
+        keywords: ["原声", "OST", "电影原声", "电视剧原声"]
+
+  # 动漫分类
+  anime:
+    name: "动漫"
+    enabled: true
+    priority: 4
+    subcategories:
+      - name: "日本动漫"
+        keywords: ["日本动漫", "日漫", "动画"]
+      - name: "国产动漫"
+        keywords: ["国产动漫", "国漫", "中国动画"]
+      - name: "欧美动漫"
+        keywords: ["欧美动漫", "美漫", "迪士尼"]
+
+# 分类优先级配置
+priority_settings:
+  default_priority: 5
+  max_priority: 10
+  min_priority: 1
+
+# 分类匹配规则
+matching_rules:
+  # 关键词匹配权重
+  keyword_weight: 1.0
+  # 标题匹配权重
+  title_weight: 2.0
+  # 描述匹配权重
+  description_weight: 0.5
+  # 标签匹配权重
+  tag_weight: 1.5
+
+# 分类缓存配置
+cache_settings:
+  enabled: true
+  ttl: 3600  # 1小时
+  max_size: 1000

@@ -1,0 +1,35 @@
+{
+  "max_concurrent_searches": {
+    "type": "number",
+    "default": 3,
+    "description": "最大并发搜索数量",
+    "min": 1,
+    "max": 10
+  },
+  "request_timeout": {
+    "type": "number",
+    "default": 10,
+    "description": "请求超时时间(秒)",
+    "min": 5,
+    "max": 60
+  },
+  "retry_count": {
+    "type": "number",
+    "default": 3,
+    "description": "重试次数",
+    "min": 0,
+    "max": 10
+  },
+  "cache_duration": {
+    "type": "number",
+    "default": 300,
+    "description": "缓存持续时间(秒)",
+    "min": 60,
+    "max": 3600
+  },
+  "auto_update_sites": {
+    "type": "boolean",
+    "default": true,
+    "description": "自动更新站点列表"
+  }
+}

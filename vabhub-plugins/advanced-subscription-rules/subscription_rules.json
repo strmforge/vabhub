@@ -1,0 +1,64 @@
+[
+  {
+    "id": "rule_1",
+    "name": "热门电影订阅",
+    "enabled": true,
+    "conditions": [
+      {
+        "type": "media",
+        "field": "type",
+        "operator": "equals",
+        "value": "movie"
+      },
+      {
+        "type": "rating",
+        "field": "rating",
+        "operator": "greater_than",
+        "value": 7.5
+      },
+      {
+        "type": "year",
+        "field": "year",
+        "operator": "greater_than",
+        "value": 2020
+      }
+    ],
+    "actions": [
+      {
+        "type": "download",
+        "action": "auto_download",
+        "priority": "normal"
+      }
+    ],
+    "created_at": "2024-01-15T10:00:00",
+    "updated_at": "2024-01-15T10:00:00"
+  },
+  {
+    "id": "rule_2",
+    "name": "4K高清订阅",
+    "enabled": true,
+    "conditions": [
+      {
+        "type": "quality",
+        "field": "resolution",
+        "operator": "equals",
+        "value": "4K"
+      },
+      {
+        "type": "codec",
+        "field": "video_codec",
+        "operator": "contains",
+        "value": "HDR"
+      }
+    ],
+    "actions": [
+      {
+        "type": "download",
+        "action": "auto_download",
+        "priority": "high"
+      }
+    ],
+    "created_at": "2024-01-15T10:30:00",
+    "updated_at": "2024-01-15T10:30:00"
+  }
+]

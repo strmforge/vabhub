@@ -1,0 +1,20 @@
+{
+  "id": "{{ cookiecutter.plugin_id }}",
+  "name": "{{ cookiecutter.plugin_name }}",
+  "version": "{{ cookiecutter.plugin_version }}",
+  "description": "{{ cookiecutter.plugin_description }}",
+  "author": "{{ cookiecutter.plugin_author }}",
+  "dependencies": [],
+  "config_schema": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable/disable the plugin"
+    },
+    "settings": {
+      "type": "object",
+      "properties": {},
+      "description": "Plugin specific settings"
+    }
+  }
+}
