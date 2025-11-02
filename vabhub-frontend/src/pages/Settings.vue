@@ -286,7 +286,12 @@
     </div>
 
     <!-- 加载状态 -->
-    <el-loading-text v-if="loading" :loading="loading" text="加载中..." />
+    <div v-if="loading" class="loading-container">
+      <el-icon class="is-loading">
+        <Loading />
+      </el-icon>
+      <span>加载中...</span>
+    </div>
   </div>
 </template>
 
@@ -294,7 +299,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
-  Setting, Brush, Bell, Folder, Magic, Lock, InfoFilled
+  Setting, Brush, Bell, Folder, Magic, Lock, InfoFilled, Loading
 } from '@element-plus/icons-vue'
 import ApiService from '@/services/api'
 

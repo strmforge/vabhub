@@ -131,7 +131,12 @@
     </div>
 
     <!-- 加载状态 -->
-    <el-loading-text v-if="loading" :loading="loading" :text="$t('common.loading')" />
+    <div v-if="loading" class="loading-container">
+      <el-icon class="is-loading">
+        <Loading />
+      </el-icon>
+      <span>{{ $t('common.loading') }}</span>
+    </div>
   </div>
 </template>
 
@@ -141,7 +146,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { 
   Refresh, VideoCamera, Collection, DataAnalysis, Bell,
-  Search, Magic, Folder, Setting
+  Search, Magic, Folder, Setting, Loading
 } from '@element-plus/icons-vue'
 import ApiService from '@/services/api'
 
