@@ -1,5 +1,12 @@
 # VabHub 更新日志
 
+## [1.6.7](https://github.com/strmforge/vabhub/compare/v1.6.6...v1.6.7) (2025-11-02)
+
+
+### Bug Fixes
+
+* 修复前端构建错误 ([dc13469](https://github.com/strmforge/vabhub/commit/dc134694fbc28c4905c09df83adbd3440f194278))
+
 ## [1.6.6](https://github.com/strmforge/vabhub/compare/v1.6.5...v1.6.6) (2025-11-02)
 
 
