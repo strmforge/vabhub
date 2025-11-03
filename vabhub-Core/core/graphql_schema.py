@@ -38,8 +38,7 @@ class SiteBundleType:
         )
 
 
-@strawberry.type
-description="HNR检测结果")
+@strawberry.type(description="HNR检测结果")
 class HNRDetectionResultType:
     has_hnr: bool
     confidence: float
@@ -58,8 +57,7 @@ class HNRDetectionResultType:
         )
 
 
-@strawberry.enum
-description="种子状态枚举")
+@strawberry.enum(description="种子状态枚举")
 class TorrentStateType:
     DOWNLOADING = "downloading"
     SEEDING = "seeding"
@@ -68,8 +66,7 @@ class TorrentStateType:
     ERROR = "error"
 
 
-@strawberry.type
-description="种子信息")
+@strawberry.type(description="种子信息")
 class TorrentInfoType:
     hash: str
     name: str
@@ -104,8 +101,7 @@ class TorrentInfoType:
         )
 
 
-@strawberry.input
-description="站点包创建输入")
+@strawberry.input(description="站点包创建输入")
 class SiteBundleCreateInput:
     name: str
     description: Optional[str] = None
@@ -114,8 +110,7 @@ class SiteBundleCreateInput:
     version: str = "1.0.0"
 
 
-@strawberry.input
-description="站点包更新输入")
+@strawberry.input(description="站点包更新输入")
 class SiteBundleUpdateInput:
     name: Optional[str] = None
     description: Optional[str] = None
@@ -124,18 +119,15 @@ class SiteBundleUpdateInput:
     version: Optional[str] = None
 
 
-@strawberry.input
-description="HNR检测输入")
+@strawberry.input(description="HNR检测输入")
 class HNRDetectionInput:
     content: str
     site_name: Optional[str] = None
     
 
-@strawberry.type
-description="查询根类型")
+@strawberry.type(description="查询根类型")
 class Query:
-    @strawberry.field
-description="获取所有站点包")
+    @strawberry.field(description="获取所有站点包")
     async def site_bundles(self) -> List[SiteBundleType]:
         from .site_bundle_manager import site_bundle_manager
         bundles = site_bundle_manager.get_all_bundles()
