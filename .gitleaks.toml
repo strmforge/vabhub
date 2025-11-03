@@ -1,0 +1,14 @@
+title = "vabhub gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allow common test files and examples"
+paths = [
+  '''^docs/''',
+  '''^examples/''',
+  '''^fixtures/''',
+  '''^test(s)?/''',
+  '''^tests/.*\.snap$'''
+]
