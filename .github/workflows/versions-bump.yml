@@ -1,0 +1,39 @@
+name: Versions Bump
+on:
+  workflow_dispatch:
+    inputs:
+      vabhub: { description: 'Portal version', required: false, default: '' }
+      core: { description: 'Core version', required: false, default: '' }
+      frontend: { description: 'Frontend version', required: false, default: '' }
+      plugins: { description: 'Plugins version', required: false, default: '' }
+      resources: { description: 'Resources version', required: false, default: '' }
+      deploy: { description: 'Deploy version', required: false, default: '' }
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure jq
+        run: |
+          if ! command -v jq >/dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
+      - name: Update versions.json
+        run: |
+          set -e
+          file="versions.json"
+          update() {{ key="$1"; val="$2"; if [ -n "$val" ]; then jq --arg v "$val" ".[$key]=\$v" "$file" > tmp && mv tmp "$file"; fi }}
+          update vabhub "${{ github.event.inputs.vabhub }}"
+          update core "${{ github.event.inputs.core }}"
+          update frontend "${{ github.event.inputs.frontend }}"
+          update plugins "${{ github.event.inputs.plugins }}"
+          update resources "${{ github.event.inputs.resources }}"
+          update deploy "${{ github.event.inputs.deploy }}"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/bump-versions-${{ github.run_id }}
+          title: 'chore(portal): bump versions.json'
+          commit-message: 'chore(portal): bump versions.json'
+          body: 'Bump versions via workflow dispatch.'
+          delete-branch: true
