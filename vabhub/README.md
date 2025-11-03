@@ -1,94 +1,109 @@
-# VabHub (Portal)
+# VabHub (Portal) · 门户与版本协调中心
 
-[![Versions Bump](https://img.shields.io/github/actions/workflow/status/strmforge/vabhub/versions-bump.yml?label=versions-bump)](https://github.com/strmforge/vabhub/actions/workflows/versions-bump.yml)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+[![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](#)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](#)
+[![Versions Matrix](https://img.shields.io/badge/versions-matrix-success)](./versions.json)
 
-VabHub 是一个"下载器 + 重命名/刮削 + 媒体库"的自动化平台。**此仓为门户与文档中心**，并维护各子仓版本（见 `versions.json`）。
-
-## 子仓（Repositories）
-- **Core（后端）**：https://github.com/strmforge/vabhub-Core
-- **Frontend（WebUI）**：https://github.com/strmforge/vabhub-frontend
-- **Deploy（部署编排）**：https://github.com/strmforge/vabhub-deploy
-- **Plugins（插件生态）**：https://github.com/strmforge/vabhub-plugins
-- **Resources（静态资源）**：https://github.com/strmforge/vabhub-resources
+VabHub 门户仓：**文档入口、子仓索引、版本矩阵（versions.json）、发布说明与路线图**。本仓库不包含运行代码。
 
 ---
 
-## 快速开始（只针对本门户仓）
-1. `versions.json` 按需修改子仓版本；
-2. 打开 **Actions → Versions Bump** 手动运行，自动生成一个更新 PR；
-3. 合并 PR 后，版本号即成为"单一事实源"，可供其他仓读取。
+## 仓库矩阵
 
-> 若你的 main 分支启用了保护，请在 Branch protection 里允许 **GitHub Actions** 创建 PR。
+| 仓库 | 作用 | 产物 |
+|---|---|---|
+| vabhub-Core | 后端（REST/GraphQL、识别/重命名、下载器/媒体库集成、插件运行时） | 后端 Docker 镜像 |
+| vabhub-frontend | Web 前端（站点管理、规则配置、订阅与任务、纠错、日志与设置） | 前端静态产物/镜像 |
+| vabhub-plugins | 官方插件集合（站点适配器、下载器桥接、后处理/订阅） | 插件源码/插件包 |
+| vabhub-resources | 纯资源与规范（Schema/正则/默认规则/图标/示例） | 版本化资源文件 |
+| vabhub-deploy | 部署与运维（Compose/K8s、.env.example、脚本） | 部署模板与脚本 |
 
-## 设计概览
-见 `docs/architecture.md` 和 `docs/repos.md`。
+> **单一事实源**：请以本仓 `versions.json` 为各子仓的推荐/对齐版本（SemVer）。
 
-## 最小骨架验证
-使用最小骨架仓库快速验证核心功能，详见 `MINIMAL_SKELETONS.md`。
+---
 
-## 🔧 使用说明
+## 版本矩阵
 
-### 版本更新流程
-1. 修改 `versions.json` 中的版本号
-2. 运行 GitHub Actions 的 "Versions Bump" 工作流
-3. 工作流会自动创建 Pull Request
-4. 合并 PR 后版本号成为单一事实源
+- 文件：[`./versions.json`](./versions.json)  
+- 流程：**先**各子仓打 tag 出包 → **再**在本仓 bump 版本矩阵 → 发布公告/变更日志。
 
-### 开发环境设置
-```bash
-# 克隆门户仓库
-git clone https://github.com/strmforge/vabhub.git
-cd vabhub
+**手动 Bump 工作流**（已内置）
+- `.github/workflows/versions-bump.yml` 支持手动输入 `core/frontend/plugins/resources/deploy` 新版本，自动创建仅改 `versions.json` 的 PR。
 
-# 查看当前版本
-cat versions.json
+---
 
-# 根据版本号克隆其他仓库
-git clone -b v1.6.0 https://github.com/strmforge/vabhub-Core.git
-git clone -b v1.6.0 https://github.com/strmforge/vabhub-frontend.git
-# ... 其他仓库
+## 文档导航
 
-# 启动开发环境
-cd vabhub-deploy
-docker-compose -f docker-compose.dev.yml up -d
+- `docs/overview.md`：项目概述与目标
+- `docs/architecture.md`：整体架构与数据流
+- `docs/roadmap.md`：路线图与迭代计划
+- `docs/changelog/`：变更日志
+- `docs/faq.md`：常见问题
+- `docs/ops-checklist.md`：仓库初始化检查清单（Actions/保护分支/Secrets/标签保护/安全）
+
+> **不要**在门户仓放置：后端/前端源码、compose/k8s、任何密钥。
+
+---
+
+# 🧩 模板使用指南（PR / Issue / Workflow）
+
+> 适用于 GitHub 默认界面；如果你使用 CodeBuddy/Kiro 等 IDE，同样遵循本目录结构生效。
+
+## 1) PR 模板如何选择
+- 单一模板：`.github/pull_request_template.md` 会作为默认 PR 模板。
+- 多模板：在 `.github/PULL_REQUEST_TEMPLATE/` 目录下选择具体模板：
+  - Portal：`versions_bump.md`、`docs_update.md`
+  - Core：`api_change.md`、`plugin_runtime.md`、`performance.md`
+  - Frontend：`ui_change.md`、`i18n_update.md`、`accessibility.md`
+  - Plugins：`new_plugin_submission.md`、`adapter_update.md`
+  - Resources：`schema_change.md`、`regex_update.md`
+  - Deploy：`compose_k8s_change.md`
+
+**在 GitHub 界面选择模板：**
+1. 点击 **New pull request** → **Create pull request**。  
+2. 在 PR 编辑页底部找到 **Change template**（或 **Choose a template**）。  
+3. 选择需要的模板，提交。
+
+**URL 直达某模板**（示例）：
+```
+https://github.com/strmforge/vabhub-Core/compare/main...feat/x?expand=1&template=api_change.md
 ```
 
-## 📁 项目结构
+> _截图示意_：  
+> ![选择 PR 模板（示意）](https://user-images.githubusercontent.com/placeholder/pr-template-choose.png)
 
-```
-vabhub/
-├── .github/workflows/          # GitHub Actions 工作流
-│   └── versions-bump.yml       # 版本更新工作流
-├── docs/                       # 架构文档
-│   ├── architecture.md         # 架构设计
-│   └── repos.md               # 仓库职责清单
-├── scripts/                    # 工具脚本
-│   └── init_and_push.sh       # 初始化脚本
-├── versions.json               # 版本配置文件
-├── README.md                   # 项目说明
-├── LICENSE                     # 许可证
-└── .gitignore                 # Git 忽略文件
-```
+## 2) Issue 模板/表单
+- 每个仓都有 `ISSUE_TEMPLATE` 目录：
+  - `bug_report.md`、`feature_request.md` 为常规模板
+  - **表单类**（YAML）：
+    - Plugins 仓：`new_plugin_intake.yml`（新插件收录）
+    - Resources 仓：`resource_request.yml`（资源请求/更新）
+    - Deploy 仓：`deploy_env_issue.yml`（部署问题）
 
-## 🔗 相关链接
+在仓库 **Issues → New issue** 页面即可看到对应入口。
 
-- **Core 仓库**: https://github.com/strmforge/vabhub-Core
-- **Frontend 仓库**: https://github.com/strmforge/vabhub-frontend
-- **Deploy 仓库**: https://github.com/strmforge/vabhub-deploy
-- **Plugins 仓库**: https://github.com/strmforge/vabhub-plugins
-- **Resources 仓库**: https://github.com/strmforge/vabhub-resources
+> _截图示意_：  
+> ![Issue 表单（示意）](https://user-images.githubusercontent.com/placeholder/issue-forms.png)
 
-## 🤝 贡献指南
+## 3) 运行 Versions Bump 工作流
+1. 打开 **Actions** → 选择 **Versions Bump** 工作流。  
+2. 点击 **Run workflow**，按需填写版本（留空则保持不变）。  
+3. 工作流会自动创建分支 `chore/bump-versions-<run_id>` 与 PR，仅修改 `versions.json`。
 
-欢迎参与 VabHub 项目的开发！请遵循以下流程：
+> _截图示意_：  
+> ![Run workflow（示意）](https://user-images.githubusercontent.com/placeholder/run-workflow.png)
 
-1. Fork 相关仓库
-2. 创建功能开发分支
-3. 开发代码并遵循项目规范
-4. 提交 Pull Request
-5. 等待代码审查和合并
+### 故障排除
+- **看不到模板**：确认目录大小写正确：
+  - `.github/pull_request_template.md`（默认）
+  - `.github/PULL_REQUEST_TEMPLATE/*.md`（多模板）
+  - `.github/ISSUE_TEMPLATE/{*.md,*.yml}`
+- **模板没有加载**：模板文件必须在**目标分支**（通常是 `main`）上。
+- **Action 没显示**：到 **Actions** 页签启用工作流；首次可能需要仓库 Owner 授权。
 
-## 📄 许可证
+---
 
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件。
+## 贡献指南 & 许可证
+- PR：小步提交、描述清晰、附带文档与验证依据。
+- 行为准则：见 `CODE_OF_CONDUCT.md`
+- 许可证：MIT © 2025 VabHub contributors

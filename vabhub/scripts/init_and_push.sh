@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-ORG="strmforge"
-REPO="vabhub"
-DEFAULT_BRANCH="main"
-
-git init
-git checkout -b "$DEFAULT_BRANCH" || true
-git add .
-git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "chore: init vabhub portal"
-
-git remote add origin "git@github.com:${ORG}/${REPO}.git" || git remote set-url origin "git@github.com:${ORG}/${REPO}.git"
+REPO_NAME="$(basename "$PWD")"
+: "${ORG:=strmforge}"
+: "${DEFAULT_BRANCH:=main}"
+REMOTE="git@github.com:${ORG}/${REPO_NAME}.git"
+if [ ! -d .git ]; then git init && git checkout -b "$DEFAULT_BRANCH"; fi
+# basic identity fallback
+if ! git config user.name >/dev/null; then git config user.name "${GIT_USER_NAME:-${ORG}}"; fi
+if ! git config user.email >/dev/null; then git config user.email "${GIT_USER_EMAIL:-noreply@users.noreply.github.com}"; fi
+git add -A
+git commit -m "chore(${REPO_NAME}): bootstrap repo with templates" || true
+git remote remove origin 2>/dev/null || true
+git remote add origin "$REMOTE"
 git push -u origin "$DEFAULT_BRANCH"
-
-echo "Done. Go to: https://github.com/${ORG}/${REPO}"
+echo "Pushed to $REMOTE"

@@ -1,9 +1,8 @@
 {
-  "schema": 1,
-  "portal": "1.6.0",
-  "core": "1.6.0",
-  "frontend": "1.6.0",
-  "deploy": "1.6.0",
-  "plugins": "1.6.0",
-  "resources": "1.6.0"
+  "vabhub": "1.5.0",
+  "core": "1.5.0",
+  "frontend": "1.5.0",
+  "plugins": "1.0.0",
+  "resources": "1.0.0",
+  "deploy": "1.5.0"
 }

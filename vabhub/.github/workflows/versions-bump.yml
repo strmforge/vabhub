@@ -1,55 +1,39 @@
 name: Versions Bump
-
 on:
   workflow_dispatch:
     inputs:
-      core:       { description: "core version (e.g. 1.5.1)", required: false }
-      frontend:   { description: "frontend version", required: false }
-      deploy:     { description: "deploy version", required: false }
-      plugins:    { description: "plugins version", required: false }
-      resources:  { description: "resources version", required: false }
-
-permissions:
-  contents: write
-  pull-requests: write
-
+      vabhub: { description: 'Portal version', required: false, default: '' }
+      core: { description: 'Core version', required: false, default: '' }
+      frontend: { description: 'Frontend version', required: false, default: '' }
+      plugins: { description: 'Plugins version', required: false, default: '' }
+      resources: { description: 'Resources version', required: false, default: '' }
+      deploy: { description: 'Deploy version', required: false, default: '' }
 jobs:
   bump:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      - name: Ensure jq
+        run: |
+          if ! command -v jq >/dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
       - name: Update versions.json
-        id: update
-        shell: bash
         run: |
           set -e
-          jq --version
           file="versions.json"
-          tmp="versions.tmp.json"
-          cp "$file" "$tmp"
-          build_jq='.'
-          [[ -n "${ github.event.inputs.core }"      ]] && build_jq="$build_jq | .core=\"${ github.event.inputs.core }\""
-          [[ -n "${ github.event.inputs.frontend }"  ]] && build_jq="$build_jq | .frontend=\"${ github.event.inputs.frontend }\""
-          [[ -n "${ github.event.inputs.deploy }"    ]] && build_jq="$build_jq | .deploy=\"${ github.event.inputs.deploy }\""
-          [[ -n "${ github.event.inputs.plugins }"   ]] && build_jq="$build_jq | .plugins=\"${ github.event.inputs.plugins }\""
-          [[ -n "${ github.event.inputs.resources }" ]] && build_jq="$build_jq | .resources=\"${ github.event.inputs.resources }\""
-          jq "$build_jq" "$tmp" > "$file"
-          echo "updated=true" >> $GITHUB_OUTPUT
-          echo "jq_expr=$build_jq" >> $GITHUB_OUTPUT
-          echo "versions_now=$(cat versions.json | tr -d '\n')" >> $GITHUB_OUTPUT
-
+          update() {{ key="$1"; val="$2"; if [ -n "$val" ]; then jq --arg v "$val" ".[$key]=\$v" "$file" > tmp && mv tmp "$file"; fi }}
+          update vabhub "${{ github.event.inputs.vabhub }}"
+          update core "${{ github.event.inputs.core }}"
+          update frontend "${{ github.event.inputs.frontend }}"
+          update plugins "${{ github.event.inputs.plugins }}"
+          update resources "${{ github.event.inputs.resources }}"
+          update deploy "${{ github.event.inputs.deploy }}"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          commit-message: "chore(portal): bump versions.json via workflow"
-          branch: "bump-versions-${ github.run_id }"
-          title: "chore: bump versions.json"
-          body: |
-            This PR updates `versions.json` using the workflow inputs.
-            jq expr: `${ steps.update.outputs.jq_expr }`
-            now: `${ steps.update.outputs.versions_now }`
-          labels: |
-            chore
-            versions
-          signoff: true
+          branch: chore/bump-versions-${{ github.run_id }}
+          title: 'chore(portal): bump versions.json'
+          commit-message: 'chore(portal): bump versions.json'
+          body: 'Bump versions via workflow dispatch.'
+          delete-branch: true

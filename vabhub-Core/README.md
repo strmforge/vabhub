@@ -1,62 +1,21 @@
-# VabHub Core v1.6.0
+# VabHub Core · 后端服务
 
-VabHub 核心后端服务，提供媒体管理、推荐算法、API接口等核心功能。
+[![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](#)
+[![Docker](https://img.shields.io/badge/docker-image-blue)](#)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](#)
 
-## 功能特性
+**唯一后端服务**：REST/GraphQL API、识别/重命名内核、站点/下载器统一抽象、媒体库集成、日志与任务调度、插件运行时（接口/SDK）。
+> 插件“实现”请放 `vabhub-plugins`，本仓仅提供运行时与接口。
 
-- 🚀 高性能API服务
-- 🤖 智能推荐算法
-- 🔐 安全认证系统
-- 📊 数据聚合与分析
-- 🔌 插件系统支持
-
-## 快速开始
-
-### 环境要求
-- Python 3.11+
-- Docker & Docker Compose
-
-### 本地开发
+## 快速开始（开发）
 ```bash
-# 克隆仓库
-git clone https://github.com/your-org/vabhub-Core.git
-cd vabhub-Core
-
-# 安装依赖
+cp config/.env.example .env
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-
-# 启动服务
-python start.py
+uvicorn core.api.main:app --host 0.0.0.0 --port 8081 --reload
 ```
-
-### Docker 运行
+**Docker**
 ```bash
-# 构建镜像
-docker build -t vabhub-core .
-
-# 运行容器
-docker run -p 8080:8000 vabhub-core
+docker build -t ghcr.io/strmforge/vabhub-core:dev .
+docker run --env-file .env -p 8081:8081 ghcr.io/strmforge/vabhub-core:dev
 ```
-
-## 项目结构
-
-```
-vabhub-Core/
-├── api/           # API接口层
-├── app/           # 应用层
-├── core/          # 核心模块
-├── utils/         # 工具类
-├── config/        # 配置管理
-├── tests/         # 测试代码
-├── Dockerfile     # 容器配置
-├── requirements.txt
-└── start.py       # 启动脚本
-```
-
-## API 文档
-
-启动服务后访问：http://localhost:8080/docs
-
-## 贡献指南
-
-请参考 [CONTRIBUTING.md](CONTRIBUTING.md)
