@@ -40,21 +40,7 @@ jobs:
       - uses: googleapis/release-please-action@v4
         with:
           release-type: simple
-          package-name: vabhub
           manifest-file: VERSION
-          changelog-types: |
-            [
-              {"type": "feat", "section": "Features"},
-              {"type": "fix", "section": "Bug Fixes"},
-              {"type": "docs", "section": "Documentation"},
-              {"type": "style", "section": "Styles"},
-              {"type": "refactor", "section": "Code Refactoring"},
-              {"type": "perf", "section": "Performance Improvements"},
-              {"type": "test", "section": "Tests"},
-              {"type": "build", "section": "Build System"},
-              {"type": "ci", "section": "Continuous Integration"},
-              {"type": "chore", "section": "Miscellaneous Chores"}
-            ]
 
   build-and-push:
     runs-on: ubuntu-latest
@@ -105,7 +91,8 @@ jobs:
         cache-to: type=gha,mode=max
         provenance: false  # 禁用provenance以解决权限问题
 
-    - name: Create GitHub Release
+    - name: Create GitHub Release (only for tags)
+      if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v2
       with:
         files: |
