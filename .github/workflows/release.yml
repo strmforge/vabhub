@@ -104,8 +104,6 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         provenance: false  # 禁用provenance以解决权限问题
-        provenance: false  # 禁用provenance以解决权限问题
-        provenance: false  # 禁用provenance以解决权限问题
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
