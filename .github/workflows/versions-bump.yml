@@ -1,39 +1,69 @@
-name: Versions Bump
+name: Bump Versions
+
 on:
   workflow_dispatch:
     inputs:
-      vabhub: { description: 'Portal version', required: false, default: '' }
-      core: { description: 'Core version', required: false, default: '' }
-      frontend: { description: 'Frontend version', required: false, default: '' }
-      plugins: { description: 'Plugins version', required: false, default: '' }
-      resources: { description: 'Resources version', required: false, default: '' }
-      deploy: { description: 'Deploy version', required: false, default: '' }
+      core_version:
+        description: 'VabHub Core version (e.g., v1.2.3)'
+        required: false
+        type: string
+      frontend_version:
+        description: 'VabHub Frontend version (e.g., v1.2.3)'
+        required: false
+        type: string
+      plugins_version:
+        description: 'VabHub Plugins version (e.g., v1.2.3)'
+        required: false
+        type: string
+      resources_version:
+        description: 'VabHub Resources version (e.g., v1.2.3)'
+        required: false
+        type: string
+      deploy_version:
+        description: 'VabHub Deploy version (e.g., v1.2.3)'
+        required: false
+        type: string
+
 jobs:
   bump:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Ensure jq
-        run: |
-          if ! command -v jq >/dev/null; then
-            sudo apt-get update && sudo apt-get install -y jq
-          fi
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Update versions.json
         run: |
-          set -e
-          file="versions.json"
-          update() {{ key="$1"; val="$2"; if [ -n "$val" ]; then jq --arg v "$val" ".[$key]=\$v" "$file" > tmp && mv tmp "$file"; fi }}
-          update vabhub "${{ github.event.inputs.vabhub }}"
-          update core "${{ github.event.inputs.core }}"
-          update frontend "${{ github.event.inputs.frontend }}"
-          update plugins "${{ github.event.inputs.plugins }}"
-          update resources "${{ github.event.inputs.resources }}"
-          update deploy "${{ github.event.inputs.deploy }}"
+          if [ -n "${{ github.event.inputs.core_version }}" ]; then
+            jq '.core = "${{ github.event.inputs.core_version }}"' versions.json > versions.tmp && mv versions.tmp versions.json
+          fi
+          
+          if [ -n "${{ github.event.inputs.frontend_version }}" ]; then
+            jq '.frontend = "${{ github.event.inputs.frontend_version }}"' versions.json > versions.tmp && mv versions.tmp versions.json
+          fi
+          
+          if [ -n "${{ github.event.inputs.plugins_version }}" ]; then
+            jq '.plugins = "${{ github.event.inputs.plugins_version }}"' versions.json > versions.tmp && mv versions.tmp versions.json
+          fi
+          
+          if [ -n "${{ github.event.inputs.resources_version }}" ]; then
+            jq '.resources = "${{ github.event.inputs.resources_version }}"' versions.json > versions.tmp && mv versions.tmp versions.json
+          fi
+          
+          if [ -n "${{ github.event.inputs.deploy_version }}" ]; then
+            jq '.deploy = "${{ github.event.inputs.deploy_version }}"' versions.json > versions.tmp && mv versions.tmp versions.json
+          fi
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: chore/bump-versions-${{ github.run_id }}
-          title: 'chore(portal): bump versions.json'
-          commit-message: 'chore(portal): bump versions.json'
-          body: 'Bump versions via workflow dispatch.'
-          delete-branch: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Bump versions'
+          title: 'Bump versions'
+          body: |
+            更新版本信息:
+            - Core: ${{ github.event.inputs.core_version }}
+            - Frontend: ${{ github.event.inputs.frontend_version }}
+            - Plugins: ${{ github.event.inputs.plugins_version }}
+            - Resources: ${{ github.event.inputs.resources_version }}
+            - Deploy: ${{ github.event.inputs.deploy_version }}
+          branch: bump-versions
