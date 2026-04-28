@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from loguru import logger
 
 from app.services.runner_heartbeat import runner_context
+from app.core.task_context import task_run_context
 
 
 async def run_sync(
@@ -33,19 +34,37 @@ async def run_sync(
     from app.services.music_chart_service import sync_all_enabled_charts
     
     async with async_session_maker() as session:
-        stats = await sync_all_enabled_charts(
-            session,
-            source_id=source_id,
-            limit_per_run=limit,
-            force=force,
-        )
-        
-        print("\n========== 榜单同步统计 ==========")
-        print(f"处理榜单数: {stats['total_charts']}")
-        print(f"成功: {stats['success_count']}")
-        print(f"失败: {stats['failed_count']}")
-        print(f"新增条目: {stats['total_new_items']}")
-        print(f"更新条目: {stats['total_updated_items']}")
+        # P4.3: 使用 task_run_context 记录执行历史
+        async with task_run_context(
+            db=session,
+            task_name="music_chart_sync",
+            task_type="runner",
+            meta={"source_id": source_id, "limit": limit, "force": force}
+        ) as run:
+            stats = await sync_all_enabled_charts(
+                session,
+                source_id=source_id,
+                limit_per_run=limit,
+                force=force,
+            )
+            
+            # 更新任务记录
+            run.message = f"同步完成: {stats['success_count']}/{stats['total_charts']} 成功"
+            run.meta_json = {
+                **run.meta_json,
+                "total_charts": stats['total_charts'],
+                "success_count": stats['success_count'],
+                "failed_count": stats['failed_count'],
+                "new_items": stats['total_new_items'],
+                "updated_items": stats['total_updated_items'],
+            }
+            
+            print("\n========== 榜单同步统计 ==========")
+            print(f"处理榜单数: {stats['total_charts']}")
+            print(f"成功: {stats['success_count']}")
+            print(f"失败: {stats['failed_count']}")
+            print(f"新增条目: {stats['total_new_items']}")
+            print(f"更新条目: {stats['total_updated_items']}")
         
         if stats['errors']:
             print("\n错误详情:")

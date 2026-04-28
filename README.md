@@ -2,13 +2,13 @@
 
 > 面向 NAS/PT 玩家的「搜索 · 下载 · 媒体库」一体化平台
 
-![Version](https://img.shields.io/badge/version-0.1.0--rc1-blue.svg)
+![Version](https://img.shields.io/badge/version-0.0.1--rc1-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.11+-green.svg)
 ![Vue](https://img.shields.io/badge/vue-3.0+-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-MIT-orange.svg)
 [![Docker Hub](https://img.shields.io/badge/Docker%20Hub-strmforge%2Fvabhub-blue?logo=docker)](https://hub.docker.com/r/strmforge/vabhub)
 
-> **当前状态**: VabHub 处于 `0.1.0-rc1` 试用阶段，推荐通过 Docker 部署体验。  
+> **当前状态**: VabHub 处于 `0.0.1-rc1` 试用阶段，推荐通过 Docker 部署体验。  
 > **官方镜像**:  
 > - Docker Hub: `strmforge/vabhub:latest`（推荐）  
 > - GHCR: `ghcr.io/strmforge/vabhub:latest`  
@@ -38,6 +38,16 @@ VabHub 是面向 **NAS/PT 玩家** 的本地优先媒体自动化中枢，打通
 ### Docker 部署（官方推荐）
 
 VabHub 仅提供 Docker 部署方式的官方支持。
+
+> ⚠️ **Windows 用户注意**  
+> Windows 上的 `docker compose build/up` **仅用于开发调试**，不能用于部署到 Linux 服务器！  
+> Windows Docker Desktop 构建的镜像与 Linux 不兼容。  
+> 
+> **部署到远程服务器（如 N100）请使用**：
+> ```powershell
+> .\scripts\deploy_n100.ps1
+> ```
+> 详见 [`docs/DEPLOY_TO_N100.md`](docs/DEPLOY_TO_N100.md)
 
 #### 1. 克隆项目
 ```bash

@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from app.models.media import Media
-from app.models.media_file import MediaFile
+from app.models.media import MediaFile
 from app.models.strm import STRMFile
 from app.models.user_video_progress import UserVideoProgress
 from app.models.subscription import Subscription

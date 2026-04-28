@@ -39,6 +39,7 @@ from app.models.scheduler_task import (
     SchedulerTask,
     SchedulerTaskExecution
 )  # 调度器任务
+from app.models.task_run_history import TaskRunHistory  # 任务执行历史（P4.1）
 from app.models.storage_monitor import (
     StorageDirectory,
     StorageUsageHistory,
@@ -191,5 +192,6 @@ __all__ = [
     "PluginStatus",  # 插件状态
     "PluginConfig",  # 插件配置（PLUGIN-UX-3）
     "PluginAuditLog",  # 插件审计日志（PLUGIN-SAFETY-1）
+    "TaskRunHistory",  # 任务执行历史（P4.1）
 ]
 

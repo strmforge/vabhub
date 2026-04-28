@@ -170,6 +170,26 @@ def require_admin(user: User) -> User:
     return user
 
 
+async def get_admin_user(
+    current_user: User = Depends(get_current_user)
+) -> User:
+    """
+    获取当前管理员用户的 FastAPI 依赖
+    如果用户不是管理员则返回 403
+    
+    用法：
+        @router.get("/admin/something")
+        async def admin_endpoint(admin: User = Depends(get_admin_user)):
+            ...
+    """
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限"
+        )
+    return current_user
+
+
 def require_not_viewer(user: User) -> User:
     """
     要求非只读用户的辅助函数

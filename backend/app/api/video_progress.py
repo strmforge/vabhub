@@ -9,7 +9,7 @@ from sqlalchemy import select, delete, func
 from typing import List, Optional
 
 from app.core.database import get_db
-from app.core.auth import get_current_user
+from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.user_video_progress import UserVideoProgress
 from app.schemas.video_progress import (

@@ -43,7 +43,7 @@ class Settings(BaseSettings):
     
     # 应用基础配置
     APP_NAME: str = "VabHub"
-    APP_VERSION: str = "1.0.0"
+    APP_VERSION: str = "0.0.1-rc1"
     DEBUG: bool = True
     LOG_LEVEL: str = "INFO"
     
@@ -77,6 +77,18 @@ class Settings(BaseSettings):
     REDIS_ENABLED: bool = os.getenv("REDIS_ENABLED", "true").lower() == "true"
     RSSHUB_ENABLED: bool = os.getenv("RSSHUB_ENABLED", "true").lower() == "true"
     RSSHUB_BASE_URL: str = os.getenv("RSSHUB_BASE_URL", "https://rsshub.app")
+    
+    # ==================== 缓存 TTL 配置 (P5) ====================
+    # 聚合页缓存时间，避免散落的 magic number
+    DISCOVER_CACHE_TTL_SECONDS: int = int(os.getenv("DISCOVER_CACHE_TTL_SECONDS", "1800"))  # 发现页缓存 30 分钟
+    MUSIC_HOME_CACHE_TTL_SECONDS: int = int(os.getenv("MUSIC_HOME_CACHE_TTL_SECONDS", "900"))  # 音乐首页缓存 15 分钟
+    CACHE_MIN_REFRESH_INTERVAL_SECONDS: int = int(os.getenv("CACHE_MIN_REFRESH_INTERVAL_SECONDS", "60"))  # 最短刷新间隔 1 分钟（防打爆外部源）
+    
+    # ==================== 日志轮转配置 (P6) ====================
+    # loguru 日志轮转设置，支持环境变量覆盖
+    LOG_ROTATION: str = os.getenv("LOG_ROTATION", "50 MB")  # 轮转条件：50 MB 或 "00:00"（每日）
+    LOG_RETENTION: str = os.getenv("LOG_RETENTION", "14 days")  # 保留时间
+    LOG_COMPRESSION: str = os.getenv("LOG_COMPRESSION", "zip")  # 压缩格式
     
     # 安全配置
     # 注意：这些默认值会在首次启动时被SecretManager自动替换为随机生成的密钥

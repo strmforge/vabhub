@@ -12,7 +12,8 @@ from pydantic import BaseModel
 from loguru import logger
 
 from app.core.database import get_session
-from app.core.auth import get_current_user
+from app.core.dependencies import get_current_user, get_admin_user
+from app.core.deps import DbSessionDep, CurrentUserDep
 from app.models.user import User
 from app.models.enums.notification_type import NotificationType
 from app.schemas.notify_actions import (
@@ -187,7 +188,7 @@ async def send_sample_notification(
 @router.get("/preview", response_model=PreviewResponse)
 async def preview_notification(
     event_type: str = "MANGA_UPDATED",
-    current_user: User = Depends(require_admin),
+    current_user: User = Depends(get_admin_user),
 ):
     """
     预览样例通知在各渠道的表现

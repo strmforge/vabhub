@@ -12,7 +12,7 @@ from sqlalchemy.orm import selectinload
 from datetime import datetime
 
 from app.core.database import get_async_session
-from app.core.response import success_response
+from app.schemas.response import success_response
 from app.models.music_chart_source import MusicChartSource
 from app.models.music_chart import MusicChart
 from app.models.music_chart_item import MusicChartItem

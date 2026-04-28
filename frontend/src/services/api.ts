@@ -2,11 +2,16 @@
  * API 客户端
  */
 
-import axios from 'axios'
+import axios, {
+  type AxiosError,
+  type AxiosInstance,
+  type AxiosResponse,
+  type InternalAxiosRequestConfig,
+} from 'axios'
 import { useAuthStore } from '@/stores/auth'
 import router from '@/router'
 
-const api = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001/api',
   timeout: 30000,
   headers: {
@@ -16,21 +21,21 @@ const api = axios.create({
 
 // 请求拦截器
 api.interceptors.request.use(
-  (config) => {
+  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const authStore = useAuthStore()
     if (authStore.token) {
       config.headers.Authorization = `Bearer ${authStore.token}`
     }
     return config
   },
-  (error) => {
+  (error: AxiosError): Promise<never> => {
     return Promise.reject(error)
   }
 )
 
 // 响应拦截器
 api.interceptors.response.use(
-  (response) => {
+  (response: AxiosResponse): AxiosResponse | Promise<never> => {
     // 处理统一响应格式
     if (response.data && typeof response.data === 'object') {
       // 检查是否是统一响应格式 {success, message, data, timestamp}
@@ -44,9 +49,12 @@ api.interceptors.response.use(
           }
         } else {
           // 如果是错误响应（success=false），转换为错误
-          const error = new Error(response.data.error_message || response.data.message || '请求失败')
-          ;(error as any).code = response.data.error_code
-          ;(error as any).details = response.data.details
+          const error = new Error(response.data.error_message || response.data.message || '请求失败') as Error & {
+            code?: string
+            details?: unknown
+          }
+          error.code = response.data.error_code
+          error.details = response.data.details
           const axiosError = Object.create(Error.prototype)
           Object.assign(axiosError, error, {
             response: {
@@ -70,28 +78,29 @@ api.interceptors.response.use(
     }
     return response
   },
-  (error) => {
+  (error: AxiosError<{ error_code?: string; error_message?: string; details?: unknown; success?: boolean; detail?: string | { message?: string } }>): Promise<never> => {
     // 处理错误响应
+    const extendedError = error as AxiosError & { errorCode?: string; errorDetails?: unknown }
     if (error.response?.data) {
       const errorData = error.response.data
       
       // 检查是否是统一错误格式
       if (errorData.error_code && errorData.error_message) {
-        error.message = errorData.error_message
-        error.errorCode = errorData.error_code
-        error.errorDetails = errorData.details
+        extendedError.message = errorData.error_message
+        extendedError.errorCode = errorData.error_code
+        extendedError.errorDetails = errorData.details
       } 
       // 检查是否是统一响应格式但success=false
       else if (errorData.success === false && errorData.error_message) {
-        error.message = errorData.error_message
-        error.errorCode = errorData.error_code
-        error.errorDetails = errorData.details
+        extendedError.message = errorData.error_message
+        extendedError.errorCode = errorData.error_code
+        extendedError.errorDetails = errorData.details
       }
       // 兼容旧的错误格式
       else if (errorData.detail) {
-        error.message = typeof errorData.detail === 'string' 
+        extendedError.message = typeof errorData.detail === 'string' 
           ? errorData.detail 
-          : errorData.detail.message || '请求失败'
+          : errorData.detail?.message || '请求失败'
       }
     }
     
@@ -102,7 +111,7 @@ api.interceptors.response.use(
       router.push('/login')
     }
     
-    return Promise.reject(error)
+    return Promise.reject(extendedError)
   }
 )
 

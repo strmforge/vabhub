@@ -16,6 +16,7 @@ from app.core.database import async_session_factory
 from app.services.runner_heartbeat import runner_context
 from app.services.system_health_service import run_all_health_checks, get_health_summary
 from app.services.system_health_notify import check_and_notify_health_status
+from app.core.task_context import task_run_context
 
 
 async def _run_once():
@@ -23,30 +24,48 @@ async def _run_once():
     logger.info("开始执行系统健康检查...")
     
     async with async_session_factory() as session:
-        checks = await run_all_health_checks(session)
-        summary = await get_health_summary(session)
-        
-        # 输出汇总
-        logger.info("=" * 50)
-        logger.info(f"健康检查完成: {summary.total_checks} 项")
-        logger.info(f"  ✅ OK: {summary.ok_count}")
-        logger.info(f"  ⚠️  Warning: {summary.warning_count}")
-        logger.info(f"  ❌ Error: {summary.error_count}")
-        logger.info(f"  ❓ Unknown: {summary.unknown_count}")
-        logger.info(f"整体状态: {summary.overall_status.upper()}")
-        logger.info("=" * 50)
-        
-        # 输出错误详情
-        if summary.error_count > 0:
-            logger.warning("错误详情:")
-            for check in summary.checks:
-                if check.status == "error":
-                    logger.warning(f"  - {check.key}: {check.last_error}")
-        
-        # 检查并发送通知（带降频）
-        await check_and_notify_health_status(session, summary)
-        
-        return summary
+        # P4.3: 使用 task_run_context 记录执行历史
+        async with task_run_context(
+            db=session,
+            task_name="ops_health_check",
+            task_type="runner",
+            meta={}
+        ) as run:
+            checks = await run_all_health_checks(session)
+            summary = await get_health_summary(session)
+            
+            # 更新任务记录
+            run.message = f"检查完成: {summary.overall_status.upper()} ({summary.ok_count} OK, {summary.error_count} Error)"
+            run.meta_json = {
+                "total_checks": summary.total_checks,
+                "ok_count": summary.ok_count,
+                "warning_count": summary.warning_count,
+                "error_count": summary.error_count,
+                "unknown_count": summary.unknown_count,
+                "overall_status": summary.overall_status,
+            }
+            
+            # 输出汇总
+            logger.info("=" * 50)
+            logger.info(f"健康检查完成: {summary.total_checks} 项")
+            logger.info(f"  ✅ OK: {summary.ok_count}")
+            logger.info(f"  ⚠️  Warning: {summary.warning_count}")
+            logger.info(f"  ❌ Error: {summary.error_count}")
+            logger.info(f"  ❓ Unknown: {summary.unknown_count}")
+            logger.info(f"整体状态: {summary.overall_status.upper()}")
+            logger.info("=" * 50)
+            
+            # 输出错误详情
+            if summary.error_count > 0:
+                logger.warning("错误详情:")
+                for check in summary.checks:
+                    if check.status == "error":
+                        logger.warning(f"  - {check.key}: {check.last_error}")
+            
+            # 检查并发送通知（带降频）
+            await check_and_notify_health_status(session, summary)
+            
+            return summary
 
 
 async def _main_async(args: argparse.Namespace):

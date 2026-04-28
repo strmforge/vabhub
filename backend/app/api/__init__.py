@@ -17,7 +17,7 @@ from app.api import (
     workflow,
     site,
     site_manager,  # 站点管理 (SITE-MANAGER-1)
-    # notification,  # 通知API - 临时注释调试
+    notification,  # 通知API - 已修复 (0.0.3)
     # notifications,  # 用户通知API - 临时注释调试
     # notifications_user,  # 用户通知API - 临时注释调试（FastAPI错误）
     calendar,
@@ -99,19 +99,19 @@ from app.api import (
     tts_user_flow,  # 用户版 TTS Flow API
     tts_user_batch,  # 用户批量 TTS API
     tts_storage,  # TTS 存储管理 Dev API
-    # notifications_user,  # 用户通知 API - 临时注释调试（FastAPI错误）
+    notifications_user,  # 用户通知 API - 已修复 (0.0.3)
     work,  # 作品中心（Work Hub）
     work_links,  # 作品关联管理（Work Link）
     audiobooks,  # 有声书文件播放 API
     user_audiobooks,  # 用户有声书播放进度 API
-    # video_progress,  # 视频播放进度 API - 临时注释调试（FastAPI错误）
+    video_progress,  # 视频播放进度 API - 已修复 (0.0.3)
     novel_center,  # 小说中心聚合 API
     novel_inbox,  # 小说 Inbox 管理 API
     audiobook_center,  # 有声书中心聚合 API
     novel_reader,  # 小说阅读器 API
     my_shelf,  # 我的书架 API
     remote_video_115,  # 115 远程视频播放 API
-    # player_wall,  # 电视墙 API - 临时注释调试（缺少media_file模块）
+    player_wall,  # 电视墙 API - 已修复 (0.0.3)
     manga_source_admin,  # 漫画源管理 API
     manga_remote,  # 远程漫画浏览 API
     manga_local,  # 本地漫画库 API
@@ -119,8 +119,8 @@ from app.api import (
     manga_sync,  # 漫画同步 API
     manga_follow,  # 漫画追更 API
     reading_hub,  # 阅读中心 API
-    # music_chart_admin,  # 音乐榜单管理 API - 临时注释调试（缺少get_async_session）
-    # music_subscription,  # 音乐订阅 API - 临时注释调试（缺少get_async_session）
+    music_chart_admin,  # 音乐榜单管理 API - 已修复 (0.0.3)
+    music_subscription,  # 音乐订阅 API - 已修复 (0.0.3)
     home,  # 首页仪表盘 API
     task_center,  # 任务中心 API
     admin_status,  # 系统运维状态 API
@@ -133,7 +133,7 @@ from app.api import (
     user_notify_channels,  # 用户通知渠道 API
     user_telegram,  # Telegram 绑定 API
     notify_preferences,  # 通知偏好 API
-    # notify_test,  # 通知测试 API - 暂时禁用，等待修复
+    notify_test,  # 通知测试 API - 已修复 (0.0.3)
     self_check,  # 自检 API
     plugin_admin,  # 插件管理 API
     plugin_config,  # 插件配置 API（PLUGIN-UX-3）
@@ -152,6 +152,7 @@ from app.api import (
     admin_system,  # 系统管理 API (DEPLOY-UPGRADE-1)
     discover,  # 发现页聚合 API (0.0.2)
     music_home,  # 音乐首页 API (0.0.3)
+    task_history,  # 任务执行历史 API (P4.4)
 )
 
 # 创建主API路由器
@@ -172,7 +173,7 @@ api_router.include_router(tasks.router, prefix="/tasks", tags=["任务管理"])
 api_router.include_router(dashboard.router, prefix="/dashboard", tags=["仪表盘"])
 api_router.include_router(workflow.router, prefix="/workflows", tags=["工作流"])
 api_router.include_router(site.router, prefix="/sites", tags=["站点管理"])
-# api_router.include_router(notification.router, prefix="/notifications", tags=["通知"])  # 暂时禁用，等待修复
+api_router.include_router(notification.router, prefix="/notifications", tags=["通知"])  # 已修复 (0.0.3)
 # api_router.include_router(notifications.router, prefix="/api/notifications", tags=["用户通知"])  # 暂时禁用，存在Schema冲突
 api_router.include_router(calendar.router, prefix="/calendar", tags=["日历"])
 api_router.include_router(music.router, prefix="/music", tags=["音乐"])  # VabHub特色功能
@@ -252,19 +253,19 @@ api_router.include_router(tts_playground.router, prefix="/dev/tts", tags=["TTS D
 api_router.include_router(tts_user_flow.router, prefix="/tts", tags=["TTS"])  # 用户版 TTS Flow API
 api_router.include_router(tts_user_batch.router, prefix="/tts/batch", tags=["TTS"])  # 用户批量 TTS API
 api_router.include_router(tts_storage.router, prefix="/dev", tags=["TTS存储（Dev）"])  # TTS 存储管理 Dev API
-# api_router.include_router(notifications_user.router, prefix="/user/notifications", tags=["用户通知"])  # 暂时禁用，存在Schema冲突
+api_router.include_router(notifications_user.router, prefix="/user/notifications", tags=["用户通知"])  # 已修复 (0.0.3)
 api_router.include_router(work.router, prefix="/work", tags=["作品中心"])  # 作品中心（Work Hub）
 api_router.include_router(work_links.router, tags=["作品关联管理"])  # 作品关联管理（Work Link）
 api_router.include_router(audiobooks.router, prefix="/audiobooks", tags=["有声书播放"])  # 有声书文件播放 API
 api_router.include_router(user_audiobooks.router, prefix="/user/audiobooks", tags=["用户有声书"])  # 用户有声书播放进度 API
-# api_router.include_router(video_progress.router, prefix="/api/video-progress", tags=["视频播放进度"])  # 暂时禁用，存在Schema冲突
+api_router.include_router(video_progress.router, tags=["视频播放进度"])  # 已修复 (0.0.3) - 路由已包含前缀
 api_router.include_router(novel_center.router, prefix="/novels/center", tags=["小说中心"])  # 小说中心聚合 API
 api_router.include_router(novel_inbox.router, prefix="/api", tags=["小说 Inbox（Dev）"])  # 小说 Inbox 管理 API
 api_router.include_router(audiobook_center.router, prefix="/audiobooks", tags=["有声书中心"])  # 有声书中心聚合 API
 api_router.include_router(novel_reader.router, prefix="/api", tags=["小说阅读器"])  # 小说阅读器 API
 api_router.include_router(my_shelf.router, prefix="/user", tags=["我的书架"])  # 我的书架 API
 api_router.include_router(remote_video_115.router, prefix="/api", tags=["115远程播放"])  # 115 远程视频播放 API
-# api_router.include_router(player_wall.router, prefix="/api/player", tags=["电视墙"])  # 暂时禁用，缺少media_file模块
+api_router.include_router(player_wall.router, prefix="/api/player", tags=["电视墙"])  # 已修复 (0.0.3)
 api_router.include_router(manga_source_admin.router, tags=["漫画源管理"])  # 漫画源管理 API（路由已包含前缀）
 api_router.include_router(manga_remote.router, tags=["远程漫画"])  # 远程漫画浏览 API（路由已包含前缀）
 api_router.include_router(manga_local.router, tags=["本地漫画库"])  # 本地漫画库 API（路由已包含前缀）
@@ -272,8 +273,8 @@ api_router.include_router(manga_progress.router, tags=["漫画阅读进度"])  #
 api_router.include_router(manga_sync.router, tags=["漫画同步"])  # 漫画同步 API（路由已包含前缀）
 api_router.include_router(manga_follow.router, tags=["漫画追更"])  # 漫画追更 API（路由已包含前缀）
 api_router.include_router(reading_hub.router, tags=["阅读中心"])  # 阅读中心 API（路由已包含前缀）
-# api_router.include_router(music_chart_admin.router, tags=["音乐榜单管理"])  # 暂时禁用，缺少get_async_session
-# api_router.include_router(music_subscription.router, tags=["音乐订阅"])  # 暂时禁用，缺少get_async_session
+api_router.include_router(music_chart_admin.router, tags=["音乐榜单管理"])  # 已修复 (0.0.3)
+api_router.include_router(music_subscription.router, tags=["音乐订阅"])  # 已修复 (0.0.3)
 api_router.include_router(home.router, tags=["首页"])  # 首页仪表盘 API（路由已包含前缀）
 api_router.include_router(task_center.router, tags=["任务中心"])  # 任务中心 API（路由已包含前缀）
 api_router.include_router(admin_status.router, tags=["系统运维"])  # 系统运维状态 API（路由已包含前缀）
@@ -286,7 +287,7 @@ api_router.include_router(alert_channels.router, tags=["告警渠道"])  # 告�
 api_router.include_router(user_notify_channels.router, tags=["用户通知渠道"])  # 用户通知渠道 API
 api_router.include_router(user_telegram.router, tags=["Telegram绑定"])  # Telegram 绑定 API
 api_router.include_router(notify_preferences.router, tags=["通知偏好"])  # 通知偏好 API（路由已包含前缀）
-# api_router.include_router(notify_test.router, tags=["通知测试"])  # 通知测试 API - 暂时禁用，等待修复
+api_router.include_router(notify_test.router, tags=["通知测试"])  # 已修复 (0.0.3)
 api_router.include_router(self_check.router, tags=["自检"])  # 自检 API（路由已包含前缀）
 api_router.include_router(plugin_admin.router, tags=["插件管理"])  # 插件管理 API（路由已包含前缀）
 api_router.include_router(plugin_config.router, tags=["插件配置"])  # 插件配置 API（PLUGIN-UX-3）
@@ -305,3 +306,4 @@ api_router.include_router(ai_reading_assistant.router, tags=["AI 阅读助手"])
 api_router.include_router(admin_system.router, tags=["系统管理"])  # 系统管理 API (DEPLOY-UPGRADE-1)
 api_router.include_router(discover.router, prefix="/discover", tags=["发现"])  # 发现页聚合 API (0.0.2)
 api_router.include_router(music_home.router, prefix="/music", tags=["音乐首页"])  # 音乐首页 API (0.0.3)
+api_router.include_router(task_history.router, tags=["任务历史"])  # 任务执行历史 API (P4.4)

@@ -1,215 +1,232 @@
 """
 健康检查API
-使用统一响应模型（特殊端点，健康检查通常有特殊的响应格式）
-"""
+SYSTEM-AUDIT-FOLLOWUP-1 P2/P3 实现
 
-from fastapi import APIRouter, HTTPException, status
+关键设计：
+- /health 端点永远返回 200（即使 DB 异常也不 500）
+- DB 异常时 status="degraded"，db.ok=false
+- 包含 DB 连接池状态监控
+"""
+from __future__ import annotations
+
+import time
+from datetime import datetime, timezone
+from typing import Any
+
+from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from loguru import logger
 
-# 避免在导入时触发SQLAlchemy映射器错误
-try:
-    from app.core.health import get_health_checker
-except Exception as e:
-    # 如果导入失败，设置一个标志
-    health_checker_available = False
-    logger.warning(f"健康检查器导入失败，将使用降级模式: {e}")
-else:
-    health_checker_available = True
-
-from app.core.schemas import (
-    BaseResponse,
-    NotFoundResponse,
-    success_response,
-    error_response
-)
+from app.core.version import APP_VERSION
 
 router = APIRouter()
 
+# 模块级启动时间，用于计算 uptime
+_START_TS = time.time()
+
 
 @router.get("/")
-async def health_check():
+async def health_check() -> dict[str, Any]:
     """
-    完整健康检查
+    简单健康检查端点
     
-    注意：健康检查端点使用特殊响应格式，不使用统一响应模型
-    因为健康检查需要特殊的HTTP状态码（200或503）
+    SYSTEM-AUDIT-FOLLOWUP-1 P2/P3 实现：
+    - 永远返回 200（即使 DB 异常也不 500）
+    - DB 异常时 status="degraded"，db.ok=false
+    - 包含 DB 连接池状态监控
     """
+    now = datetime.now(timezone.utc).isoformat()
+    uptime = int(time.time() - _START_TS)
+    
+    db_ok = True
+    db_latency_ms: int | None = None
+    pool_status: str | None = None
+    db_error: str | None = None
+    
+    # P3: DB 连接池监控
     try:
-        # 使用完全独立的健康检查实现，避免任何SQLAlchemy映射器错误
-        import shutil
-        import os
-        from datetime import datetime
+        from app.core.database import engine
+        from sqlalchemy import text
         
-        # 检查数据库连接（使用原始SQL连接）
+        t0 = time.perf_counter()
+        async with engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+        db_latency_ms = int((time.perf_counter() - t0) * 1000)
+        
+        # 获取连接池状态
+        try:
+            pool_status = str(engine.sync_engine.pool.status())
+        except Exception:
+            pool_status = None
+            
+    except Exception as e:
+        db_ok = False
+        db_error = str(e)
+        logger.warning(f"健康检查: 数据库连接失败 - {e}")
+    
+    # 确定总体状态
+    status = "ok" if db_ok else "degraded"
+    
+    return {
+        "status": status,
+        "version": APP_VERSION,
+        "time": now,
+        "uptime_seconds": uptime,
+        "db": {
+            "ok": db_ok,
+            "latency_ms": db_latency_ms,
+            "pool": pool_status,
+            "error": db_error,
+        },
+    }
+
+
+@router.get("/full")
+async def health_check_full():
+    """
+    完整健康检查（兼容旧版）
+    
+    检查数据库、缓存、磁盘等
+    """
+    import shutil
+    import os
+    
+    now = datetime.now(timezone.utc).isoformat()
+    uptime = int(time.time() - _START_TS)
+    
+    # 检查数据库连接
+    db_ok = True
+    db_latency_ms: int | None = None
+    pool_status: str | None = None
+    
+    try:
+        from app.core.database import engine
+        from sqlalchemy import text
+        
+        t0 = time.perf_counter()
+        async with engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+        db_latency_ms = int((time.perf_counter() - t0) * 1000)
+        
+        try:
+            pool_status = str(engine.sync_engine.pool.status())
+        except Exception:
+            pool_status = None
+    except Exception as e:
+        db_ok = False
+        logger.warning(f"健康检查: 数据库连接失败 - {e}")
+    
+    # 检查缓存系统
+    cache_ok = True
+    try:
+        from app.core.cache import get_cache
+        cache = get_cache()
+        test_key = "health_check_test"
+        await cache.set(test_key, "test", ttl=10)
+        value = await cache.get(test_key)
+        cache_ok = value == "test"
+        if cache_ok:
+            await cache.delete(test_key)
+    except Exception as e:
+        cache_ok = False
+        logger.warning(f"健康检查: 缓存系统异常 - {e}")
+    
+    # 检查磁盘空间
+    disk_ok = True
+    disk_used_percent: float | None = None
+    try:
+        from app.core.config import settings
+        storage_path = settings.STORAGE_PATH
+        if os.path.exists(storage_path):
+            stat = shutil.disk_usage(storage_path)
+            disk_used_percent = round((stat.used / stat.total) * 100, 2)
+            disk_ok = disk_used_percent < 90
+    except Exception as e:
+        disk_ok = False
+        logger.warning(f"健康检查: 磁盘检查失败 - {e}")
+    
+    # 确定总体状态
+    all_ok = db_ok and cache_ok and disk_ok
+    status = "ok" if all_ok else "degraded"
+    
+    return {
+        "status": status,
+        "version": APP_VERSION,
+        "time": now,
+        "uptime_seconds": uptime,
+        "db": {
+            "ok": db_ok,
+            "latency_ms": db_latency_ms,
+            "pool": pool_status,
+        },
+        "cache": {
+            "ok": cache_ok,
+        },
+        "disk": {
+            "ok": disk_ok,
+            "used_percent": disk_used_percent,
+        },
+    }
+
+
+@router.get("/{check_name}")
+async def health_check_item(check_name: str) -> dict[str, Any]:
+    """
+    单项健康检查
+    
+    支持的检查项: db, cache, disk
+    永远返回 200，异常时 ok=false
+    """
+    now = datetime.now(timezone.utc).isoformat()
+    
+    if check_name == "db":
         try:
             from app.core.database import engine
             from sqlalchemy import text
             
-            async def test_database():
-                async with engine.begin() as conn:
-                    await conn.execute(text("SELECT 1"))
+            t0 = time.perf_counter()
+            async with engine.connect() as conn:
+                await conn.execute(text("SELECT 1"))
+            latency_ms = int((time.perf_counter() - t0) * 1000)
             
-            await test_database()
-            database_status = "healthy"
-            database_message = "数据库连接正常"
+            pool_status = None
+            try:
+                pool_status = str(engine.sync_engine.pool.status())
+            except Exception:
+                pass
+            
+            return {"check": "db", "ok": True, "latency_ms": latency_ms, "pool": pool_status, "time": now}
         except Exception as e:
-            database_status = "unhealthy"
-            database_message = f"数据库连接失败: {str(e)}"
-        
-        # 检查缓存系统（仅测试L1和L2）
+            return {"check": "db", "ok": False, "error": str(e), "time": now}
+    
+    elif check_name == "cache":
         try:
             from app.core.cache import get_cache
-            
-            async def test_cache():
-                cache = get_cache()
-                test_key = "health_check_test"
-                test_value = "test"
-                await cache.set(test_key, test_value, ttl=10)
-                value = await cache.get(test_key)
-                if value == test_value:
-                    await cache.delete(test_key)
-                    return True
-                return False
-            
-            cache_ok = await test_cache()
-            cache_status = "healthy" if cache_ok else "unhealthy"
-            cache_message = "缓存系统正常" if cache_ok else "缓存系统异常"
+            cache = get_cache()
+            test_key = "health_check_test"
+            await cache.set(test_key, "test", ttl=10)
+            value = await cache.get(test_key)
+            ok = value == "test"
+            if ok:
+                await cache.delete(test_key)
+            return {"check": "cache", "ok": ok, "time": now}
         except Exception as e:
-            cache_status = "unhealthy"
-            cache_message = f"缓存系统异常: {str(e)}"
-        
-        # 检查磁盘空间
+            return {"check": "cache", "ok": False, "error": str(e), "time": now}
+    
+    elif check_name == "disk":
         try:
+            import shutil
+            import os
             from app.core.config import settings
             storage_path = settings.STORAGE_PATH
             if os.path.exists(storage_path):
                 stat = shutil.disk_usage(storage_path)
-                used_percent = (stat.used / stat.total) * 100
-                disk_ok = used_percent < 90
-                disk_status = "healthy" if disk_ok else "warning"
-                disk_message = f"磁盘空间: {used_percent:.1f}% 已使用"
-            else:
-                disk_status = "warning"
-                disk_message = "存储路径不存在"
+                used_percent = round((stat.used / stat.total) * 100, 2)
+                return {"check": "disk", "ok": used_percent < 90, "used_percent": used_percent, "time": now}
+            return {"check": "disk", "ok": False, "error": "存储路径不存在", "time": now}
         except Exception as e:
-            disk_status = "unhealthy"
-            disk_message = f"磁盘检查失败: {str(e)}"
-        
-        # 构建响应
-        results = {
-            "database": {
-                "status": database_status,
-                "message": database_message
-            },
-            "cache": {
-                "status": cache_status,
-                "message": cache_message
-            },
-            "cache_l3": {
-                "status": "warning",
-                "message": "L3缓存检查暂时不可用（SQLAlchemy映射器配置有冲突，不影响基本功能）"
-            },
-            "disk": {
-                "status": disk_status,
-                "message": disk_message
-            }
-        }
-        
-        # 确定总体状态
-        overall_status = "healthy"
-        for check in results.values():
-            if check["status"] == "unhealthy":
-                overall_status = "unhealthy"
-                break
-            elif check["status"] == "warning" and overall_status == "healthy":
-                overall_status = "warning"
-        
-        return JSONResponse(
-            content={
-                "status": overall_status,
-                "timestamp": datetime.utcnow().isoformat(),
-                "checks": results
-            },
-            status_code=200
-        )
-        
-    except Exception as e:
-        # 检查是否是SQLAlchemy映射器错误
-        error_msg = str(e)
-        if "mapper" in error_msg.lower() or "foreign key" in error_msg.lower():
-            # SQLAlchemy映射器错误，返回降级响应
-            logger.warning(f"健康检查遇到SQLAlchemy映射器错误，使用降级响应: {e}")
-            return JSONResponse(
-                content={
-                    "status": "warning",
-                    "timestamp": datetime.utcnow().isoformat(),
-                    "checks": {
-                        "database": {
-                            "status": "healthy", 
-                            "message": "数据库连接正常"
-                        },
-                        "cache": {
-                            "status": "healthy",
-                            "message": "缓存系统正常 (2级缓存: MemoryCacheBackend, RedisCacheBackend)",
-                            "backend_count": 2,
-                            "backend_types": ["MemoryCacheBackend", "RedisCacheBackend"]
-                        },
-                        "cache_l3": {
-                            "status": "warning",
-                            "message": "L3缓存检查暂时不可用（SQLAlchemy映射器配置有冲突，不影响基本功能）"
-                        },
-                        "disk": {
-                            "status": "healthy",
-                            "message": "磁盘空间: 9.7% 已使用",
-                            "total_gb": 931.51,
-                            "free_gb": 840.93,
-                            "used_percent": 9.72
-                        }
-                    }
-                },
-                status_code=200
-            )
-        else:
-            # 其他错误
-            logger.error(f"健康检查失败: {e}")
-            return JSONResponse(
-                content={
-                    "status": "unhealthy",
-                    "error": str(e)
-                },
-                status_code=503
-            )
-
-
-@router.get("/{check_name}")
-async def health_check_item(check_name: str):
-    """
-    单项健康检查
+            return {"check": "disk", "ok": False, "error": str(e), "time": now}
     
-    注意：健康检查端点使用特殊响应格式，不使用统一响应模型
-    因为健康检查需要特殊的HTTP状态码（200或503）
-    """
-    try:
-        health_checker = get_health_checker()
-        result = await health_checker.check(check_name)
-        if result is None:
-            return JSONResponse(
-                content={
-                    "error": f"健康检查项不存在: {check_name}",
-                    "status": "unknown"
-                },
-                status_code=404
-            )
-        status_code = 200 if result.get("status") == "healthy" else 503
-        return JSONResponse(content=result, status_code=status_code)
-    except Exception as e:
-        logger.error(f"健康检查失败: {e}")
-        return JSONResponse(
-            content={
-                "status": "unhealthy",
-                "error": str(e)
-            },
-            status_code=503
-        )
+    else:
+        return {"check": check_name, "ok": False, "error": f"未知检查项: {check_name}", "time": now}
 

@@ -114,23 +114,24 @@ async def _fetch_tmdb_trending(media_type: str, time_window: str = "week") -> Li
             data = response.json()
             results = data.get("results", [])[:12]  # 限制数量
         
-        await cache.set(cache_key, results, ttl=1800)  # 缓存30分钟
+        await cache.set(cache_key, results, ttl=settings.DISCOVER_CACHE_TTL_SECONDS)
         return results
     except Exception as e:
         logger.warning(f"获取 TMDB trending 失败: {e}")
         return []
 
 
-async def _fetch_tmdb_popular(media_type: str) -> List[dict]:
+async def _fetch_tmdb_popular(media_type: str, refresh: bool = False) -> List[dict]:
     """获取 TMDB 流行内容"""
     api_key = settings.TMDB_API_KEY
     if not api_key:
         return []
     
     cache_key = cache.generate_key("tmdb_popular", media_type=media_type)
-    cached = await cache.get(cache_key)
-    if cached is not None:
-        return cached
+    if not refresh:
+        cached = await cache.get(cache_key)
+        if cached is not None:
+            return cached
     
     try:
         from app.utils.http_client import create_httpx_client
@@ -146,7 +147,7 @@ async def _fetch_tmdb_popular(media_type: str) -> List[dict]:
             data = response.json()
             results = data.get("results", [])[:12]
         
-        await cache.set(cache_key, results, ttl=1800)
+        await cache.set(cache_key, results, ttl=settings.DISCOVER_CACHE_TTL_SECONDS)
         return results
     except Exception as e:
         logger.warning(f"获取 TMDB popular 失败: {e}")
@@ -154,9 +155,13 @@ async def _fetch_tmdb_popular(media_type: str) -> List[dict]:
 
 
 @router.get("/home", summary="获取发现页首页内容")
-async def get_discover_home():
+async def get_discover_home(
+    refresh: bool = Query(False, description="强制刷新缓存")
+):
     """
     获取发现页聚合内容 (0.0.3 多源版本)
+    
+    P5: 支持 ?refresh=1 强制刷新缓存
     
     聚合 TMDB / 豆瓣 / Bangumi 热门内容：
     - 优先使用公共 key（PUBLIC_TMDB_DISCOVER_KEY）
@@ -171,9 +176,10 @@ async def get_discover_home():
     - key_source: "public" | "private" | "none"
     - message: 状态提示
     """
+    from datetime import datetime
     try:
         service = get_discover_service()
-        result = await service.get_home()
+        result = await service.get_home(refresh=refresh)
         
         # 转换为兼容 0.0.2 的响应格式
         legacy_sections = []

@@ -18,6 +18,7 @@ from app.models.subscription import Subscription
 from app.modules.subscription.service import SubscriptionService as ExistingSubscriptionService
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
+from app.core.task_context import task_run_context
 
 
 @dataclass
@@ -281,35 +282,50 @@ async def main():
     
     # 创建数据库会话
     async with AsyncSessionLocal() as db:
-        try:
-            if args.id:
-                # 检查单个订阅
-                result = await run_single_subscription_check(
-                    db=db,
-                    subscription_id=args.id,
-                    dry_run=args.dry_run
-                )
-                
-                logger.info(f"单个订阅检查完成: {result}")
-                
-            else:
-                # 批量检查订阅
-                result = await run_subscription_checks(
-                    db=db,
-                    max_subscriptions=args.limit,
-                    cooldown_minutes=args.cooldown,
-                    dry_run=args.dry_run
-                )
-                
-                logger.info(f"批量订阅检查完成: {result}")
-        
-        except KeyboardInterrupt:
-            logger.info("用户中断，退出")
-        except Exception as e:
-            logger.error(f"Runner 执行异常: {e}")
-            raise
-        finally:
-            await db.close()
+        # P4.3: 使用 task_run_context 记录执行历史
+        async with task_run_context(
+            db=db,
+            task_name="subscription_checker",
+            task_type="runner",
+            meta={"limit": args.limit, "cooldown": args.cooldown, "dry_run": args.dry_run}
+        ) as run:
+            try:
+                if args.id:
+                    # 检查单个订阅
+                    result = await run_single_subscription_check(
+                        db=db,
+                        subscription_id=args.id,
+                        dry_run=args.dry_run
+                    )
+                    run.message = f"单个订阅检查完成: ID={args.id}"
+                    run.meta_json = {**run.meta_json, "subscription_id": args.id, "result": str(result)}
+                    logger.info(f"单个订阅检查完成: {result}")
+                    
+                else:
+                    # 批量检查订阅
+                    result = await run_subscription_checks(
+                        db=db,
+                        max_subscriptions=args.limit,
+                        cooldown_minutes=args.cooldown,
+                        dry_run=args.dry_run
+                    )
+                    run.message = f"批量检查: {result.succeeded_checks}/{result.total_subscriptions} 成功"
+                    run.meta_json = {
+                        **run.meta_json,
+                        "total": result.total_subscriptions,
+                        "checked": result.checked_subscriptions,
+                        "succeeded": result.succeeded_checks,
+                        "failed": result.failed_checks,
+                        "created_tasks": result.created_tasks,
+                    }
+                    logger.info(f"批量订阅检查完成: {result}")
+            
+            except KeyboardInterrupt:
+                run.message = "用户中断"
+                logger.info("用户中断，退出")
+            except Exception as e:
+                logger.error(f"Runner 执行异常: {e}")
+                raise
 
 
 if __name__ == "__main__":

@@ -231,6 +231,12 @@ const router = createRouter({
       meta: { requiresAuth: true, title: '实时日志中心' }
     },
     {
+      path: '/task-history',
+      name: 'TaskHistory',
+      component: () => import('@/pages/TaskHistory.vue'),
+      meta: { requiresAuth: true, title: '任务历史' }
+    },
+    {
       path: '/plugins',
       name: 'Plugins',
       component: () => import('@/pages/Plugins.vue'),

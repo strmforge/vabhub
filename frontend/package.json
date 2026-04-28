@@ -1,6 +1,6 @@
 {
   "name": "vabhub-frontend",
-  "version": "0.1.0-rc1",
+  "version": "0.0.1-rc1",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@9.15.0",
@@ -34,6 +34,9 @@
     "vuetify": "^3.5.10"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.7.2",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/tsconfig": "^0.5.1",
